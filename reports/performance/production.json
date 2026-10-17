@@ -1,0 +1,783 @@
+{
+  "base": "http://localhost:3100",
+  "label": "production",
+  "date": "2026-10-17T15:16:33.034Z",
+  "runs": [
+    {
+      "profile": "mobile-4g-cpu4x",
+      "run": 1,
+      "status": 200,
+      "ttfb": 64.89999999850988,
+      "fcp": 904,
+      "lcp": 1620,
+      "cls": 0,
+      "blockingTime": 127,
+      "longTaskCount": 1,
+      "domContentLoaded": 813.1999999992549,
+      "requests": 26,
+      "sameOriginTransferBytes": 139059,
+      "imageCount": 12,
+      "loadedImages": 12,
+      "horizontalOverflow": false,
+      "stylesheetApplied": true,
+      "imageBounds": [
+        {
+          "alt": "Банана",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Портокал",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Лимон",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Грозје",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Јаболко",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Мандарина",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Киви",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Домат",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Црвена пиперка",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Краставица",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Морков",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Марула",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        }
+      ],
+      "errors": [],
+      "failedRequests": [],
+      "badResponses": []
+    },
+    {
+      "profile": "mobile-4g-cpu4x",
+      "run": 2,
+      "status": 200,
+      "ttfb": 6.400000002235174,
+      "fcp": 792,
+      "lcp": 1724,
+      "cls": 0,
+      "blockingTime": 145,
+      "longTaskCount": 1,
+      "domContentLoaded": 801.6999999992549,
+      "requests": 25,
+      "sameOriginTransferBytes": 136715,
+      "imageCount": 12,
+      "loadedImages": 12,
+      "horizontalOverflow": false,
+      "stylesheetApplied": true,
+      "imageBounds": [
+        {
+          "alt": "Банана",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Портокал",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Лимон",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Грозје",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Јаболко",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Мандарина",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Киви",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Домат",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Црвена пиперка",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Краставица",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Морков",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Марула",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        }
+      ],
+      "errors": [],
+      "failedRequests": [],
+      "badResponses": []
+    },
+    {
+      "profile": "mobile-4g-cpu4x",
+      "run": 3,
+      "status": 200,
+      "ttfb": 5,
+      "fcp": 760,
+      "lcp": 1556,
+      "cls": 0,
+      "blockingTime": 162,
+      "longTaskCount": 1,
+      "domContentLoaded": 771.8999999985099,
+      "requests": 25,
+      "sameOriginTransferBytes": 136715,
+      "imageCount": 12,
+      "loadedImages": 12,
+      "horizontalOverflow": false,
+      "stylesheetApplied": true,
+      "imageBounds": [
+        {
+          "alt": "Банана",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Портокал",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Лимон",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Грозје",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Јаболко",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Мандарина",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Киви",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Домат",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Црвена пиперка",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Краставица",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Морков",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Марула",
+          "width": 160,
+          "height": 160,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        }
+      ],
+      "errors": [],
+      "failedRequests": [],
+      "badResponses": []
+    },
+    {
+      "profile": "desktop-unthrottled",
+      "run": 1,
+      "status": 200,
+      "ttfb": 6,
+      "fcp": 104,
+      "lcp": 320,
+      "cls": 0,
+      "blockingTime": 0,
+      "longTaskCount": 0,
+      "domContentLoaded": 23,
+      "requests": 29,
+      "sameOriginTransferBytes": 142370,
+      "imageCount": 12,
+      "loadedImages": 12,
+      "horizontalOverflow": false,
+      "stylesheetApplied": true,
+      "imageBounds": [
+        {
+          "alt": "Банана",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Портокал",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Лимон",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Грозје",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Јаболко",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Мандарина",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Киви",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Домат",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Црвена пиперка",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Краставица",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Морков",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Марула",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        }
+      ],
+      "errors": [],
+      "failedRequests": [],
+      "badResponses": []
+    },
+    {
+      "profile": "desktop-unthrottled",
+      "run": 2,
+      "status": 200,
+      "ttfb": 4.799999997019768,
+      "fcp": 116,
+      "lcp": 300,
+      "cls": 0,
+      "blockingTime": 0,
+      "longTaskCount": 0,
+      "domContentLoaded": 92,
+      "requests": 29,
+      "sameOriginTransferBytes": 142370,
+      "imageCount": 12,
+      "loadedImages": 12,
+      "horizontalOverflow": false,
+      "stylesheetApplied": true,
+      "imageBounds": [
+        {
+          "alt": "Банана",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Портокал",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Лимон",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Грозје",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Јаболко",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Мандарина",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Киви",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Домат",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Црвена пиперка",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Краставица",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Морков",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Марула",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        }
+      ],
+      "errors": [],
+      "failedRequests": [],
+      "badResponses": []
+    },
+    {
+      "profile": "desktop-unthrottled",
+      "run": 3,
+      "status": 200,
+      "ttfb": 4.300000000745058,
+      "fcp": 92,
+      "lcp": 272,
+      "cls": 0,
+      "blockingTime": 0,
+      "longTaskCount": 0,
+      "domContentLoaded": 21,
+      "requests": 29,
+      "sameOriginTransferBytes": 142370,
+      "imageCount": 12,
+      "loadedImages": 12,
+      "horizontalOverflow": false,
+      "stylesheetApplied": true,
+      "imageBounds": [
+        {
+          "alt": "Банана",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Портокал",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Лимон",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Грозје",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Јаболко",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Мандарина",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Киви",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Домат",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Црвена пиперка",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Краставица",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Морков",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Марула",
+          "width": 275,
+          "height": 218,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        }
+      ],
+      "errors": [],
+      "failedRequests": [],
+      "badResponses": []
+    }
+  ],
+  "interactions": {
+    "stylesheetApplied": true,
+    "menuInitiallyHidden": true,
+    "menuOpened": true,
+    "menuClosed": true,
+    "vegetableCount": 5,
+    "fruitCount": 7,
+    "reloads": [
+      {
+        "status": 200,
+        "duration": 280,
+        "cards": 7,
+        "headerVisible": true
+      },
+      {
+        "status": 200,
+        "duration": 289,
+        "cards": 7,
+        "headerVisible": true
+      },
+      {
+        "status": 200,
+        "duration": 282,
+        "cards": 7,
+        "headerVisible": true
+      },
+      {
+        "status": 200,
+        "duration": 302,
+        "cards": 7,
+        "headerVisible": true
+      },
+      {
+        "status": 200,
+        "duration": 290,
+        "cards": 7,
+        "headerVisible": true
+      }
+    ],
+    "errors": [],
+    "badResponses": []
+  },
+  "routeChecks": [
+    {
+      "route": "/",
+      "status": 200,
+      "duration": 50,
+      "overflow": false,
+      "header": true,
+      "productCards": 12,
+      "oversizedPhotos": 0
+    },
+    {
+      "route": "/fruit",
+      "status": 200,
+      "duration": 51,
+      "overflow": false,
+      "header": true,
+      "productCards": 7,
+      "oversizedPhotos": 0
+    },
+    {
+      "route": "/vegetables",
+      "status": 200,
+      "duration": 43,
+      "overflow": false,
+      "header": true,
+      "productCards": 5,
+      "oversizedPhotos": 0
+    },
+    {
+      "route": "/sale",
+      "status": 200,
+      "duration": 38,
+      "overflow": false,
+      "header": true,
+      "productCards": 2,
+      "oversizedPhotos": 0
+    },
+    {
+      "route": "/contact",
+      "status": 200,
+      "duration": 40,
+      "overflow": false,
+      "header": true,
+      "productCards": 0,
+      "oversizedPhotos": 0
+    },
+    {
+      "route": "/admin",
+      "status": 200,
+      "duration": 72,
+      "overflow": false,
+      "header": true,
+      "productCards": 0,
+      "oversizedPhotos": 0
+    },
+    {
+      "route": "/admin/products",
+      "status": 200,
+      "duration": 67,
+      "overflow": false,
+      "header": true,
+      "productCards": 0,
+      "oversizedPhotos": 0
+    },
+    {
+      "route": "/admin/products/new",
+      "status": 200,
+      "duration": 48,
+      "overflow": false,
+      "header": true,
+      "productCards": 0,
+      "oversizedPhotos": 0
+    },
+    {
+      "route": "/admin/products/banana/edit",
+      "status": 200,
+      "duration": 89,
+      "overflow": false,
+      "header": true,
+      "productCards": 0,
+      "oversizedPhotos": 0
+    },
+    {
+      "route": "/admin/login",
+      "status": 200,
+      "duration": 54,
+      "overflow": false,
+      "header": true,
+      "productCards": 0,
+      "oversizedPhotos": 0
+    }
+  ]
+}

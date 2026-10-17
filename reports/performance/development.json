@@ -1,0 +1,936 @@
+{
+  "base": "http://localhost:3000",
+  "label": "development",
+  "date": "2026-10-17T15:14:07.466Z",
+  "runs": [
+    {
+      "profile": "mobile-4g-cpu4x",
+      "run": 1,
+      "status": 200,
+      "ttfb": 142.30000000074506,
+      "fcp": 620,
+      "lcp": 1600,
+      "cls": 0,
+      "blockingTime": 0,
+      "longTaskCount": 0,
+      "domContentLoaded": 579.6999999992549,
+      "requests": 11,
+      "sameOriginTransferBytes": 229267,
+      "imageCount": 12,
+      "loadedImages": 4,
+      "horizontalOverflow": false,
+      "imageBounds": [
+        {
+          "alt": "Банана",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Портокал",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Лимон",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Грозје",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Јаболко",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Мандарина",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Киви",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Домат",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Црвена пиперка",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Краставица",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Морков",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Марула",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        }
+      ],
+      "errors": [],
+      "failedRequests": [
+        {
+          "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250047740",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250047740",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "badResponses": [
+        {
+          "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250047740",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250047740",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "profile": "mobile-4g-cpu4x",
+      "run": 2,
+      "status": 200,
+      "ttfb": 82.89999999850988,
+      "fcp": 572,
+      "lcp": 1172,
+      "cls": 0,
+      "blockingTime": 0,
+      "longTaskCount": 0,
+      "domContentLoaded": 570.2999999970198,
+      "requests": 10,
+      "sameOriginTransferBytes": 228965,
+      "imageCount": 12,
+      "loadedImages": 4,
+      "horizontalOverflow": false,
+      "imageBounds": [
+        {
+          "alt": "Банана",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Портокал",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Лимон",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Грозје",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Јаболко",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Мандарина",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Киви",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Домат",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Црвена пиперка",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Краставица",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Морков",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Марула",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        }
+      ],
+      "errors": [],
+      "failedRequests": [
+        {
+          "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250057798",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250057798",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "badResponses": [
+        {
+          "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250057798",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250057798",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "profile": "mobile-4g-cpu4x",
+      "run": 3,
+      "status": 200,
+      "ttfb": 99.80000000074506,
+      "fcp": 592,
+      "lcp": 1172,
+      "cls": 0,
+      "blockingTime": 0,
+      "longTaskCount": 0,
+      "domContentLoaded": 590.3000000007451,
+      "requests": 10,
+      "sameOriginTransferBytes": 228965,
+      "imageCount": 12,
+      "loadedImages": 4,
+      "horizontalOverflow": false,
+      "imageBounds": [
+        {
+          "alt": "Банана",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Портокал",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Лимон",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Грозје",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Јаболко",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Мандарина",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Киви",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Домат",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Црвена пиперка",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Краставица",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Морков",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Марула",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        }
+      ],
+      "errors": [],
+      "failedRequests": [
+        {
+          "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250067557",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250067557",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "badResponses": [
+        {
+          "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250067557",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250067557",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "profile": "desktop-unthrottled",
+      "run": 1,
+      "status": 200,
+      "ttfb": 85.10000000149012,
+      "fcp": 188,
+      "lcp": 420,
+      "cls": 0,
+      "blockingTime": 0,
+      "longTaskCount": 0,
+      "domContentLoaded": 168.39999999850988,
+      "requests": 10,
+      "sameOriginTransferBytes": 228968,
+      "imageCount": 12,
+      "loadedImages": 4,
+      "horizontalOverflow": false,
+      "imageBounds": [
+        {
+          "alt": "Банана",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Портокал",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Лимон",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Грозје",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Јаболко",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Мандарина",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Киви",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Домат",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Црвена пиперка",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Краставица",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Морков",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Марула",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        }
+      ],
+      "errors": [],
+      "failedRequests": [
+        {
+          "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250077313",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250077313",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "badResponses": [
+        {
+          "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250077313",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250077313",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "profile": "desktop-unthrottled",
+      "run": 2,
+      "status": 200,
+      "ttfb": 87.79999999701977,
+      "fcp": 176,
+      "lcp": 356,
+      "cls": 0,
+      "blockingTime": 0,
+      "longTaskCount": 0,
+      "domContentLoaded": 119.19999999925494,
+      "requests": 10,
+      "sameOriginTransferBytes": 228964,
+      "imageCount": 12,
+      "loadedImages": 4,
+      "horizontalOverflow": false,
+      "imageBounds": [
+        {
+          "alt": "Банана",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Портокал",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Лимон",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Грозје",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Јаболко",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Мандарина",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Киви",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Домат",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Црвена пиперка",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Краставица",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Морков",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Марула",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        }
+      ],
+      "errors": [],
+      "failedRequests": [
+        {
+          "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250081998",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250081998",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "badResponses": [
+        {
+          "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250081998",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250081998",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "profile": "desktop-unthrottled",
+      "run": 3,
+      "status": 200,
+      "ttfb": 95.89999999850988,
+      "fcp": 172,
+      "lcp": 388,
+      "cls": 0,
+      "blockingTime": 0,
+      "longTaskCount": 0,
+      "domContentLoaded": 165.60000000149012,
+      "requests": 10,
+      "sameOriginTransferBytes": 228968,
+      "imageCount": 12,
+      "loadedImages": 4,
+      "horizontalOverflow": false,
+      "imageBounds": [
+        {
+          "alt": "Банана",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Портокал",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Лимон",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Грозје",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 480,
+          "naturalHeight": 360
+        },
+        {
+          "alt": "Јаболко",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Мандарина",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Киви",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Домат",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Црвена пиперка",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Краставица",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Морков",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        },
+        {
+          "alt": "Марула",
+          "width": 480,
+          "height": 360,
+          "naturalWidth": 0,
+          "naturalHeight": 0
+        }
+      ],
+      "errors": [],
+      "failedRequests": [
+        {
+          "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250086273",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250086273",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "badResponses": [
+        {
+          "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250086273",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250086273",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+          "status": 404
+        }
+      ]
+    }
+  ],
+  "interactions": {
+    "menuOpened": true,
+    "menuClosed": true,
+    "vegetableCount": 5,
+    "fruitCount": 7,
+    "reloads": [
+      {
+        "status": 200,
+        "duration": 382,
+        "cards": 7,
+        "headerVisible": true
+      },
+      {
+        "status": 200,
+        "duration": 415,
+        "cards": 7,
+        "headerVisible": true
+      },
+      {
+        "status": 200,
+        "duration": 365,
+        "cards": 7,
+        "headerVisible": true
+      },
+      {
+        "status": 200,
+        "duration": 364,
+        "cards": 7,
+        "headerVisible": true
+      },
+      {
+        "status": 200,
+        "duration": 352,
+        "cards": 7,
+        "headerVisible": true
+      }
+    ],
+    "errors": [],
+    "badResponses": [
+      {
+        "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250090632",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250090632",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250090934",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250090934",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250091495",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250091495",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250091752",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250091752",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250092232",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250092232",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250092642",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250092642",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250093044",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250093044",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1792250093450",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1792250093450",
+        "status": 404
+      },
+      {
+        "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+        "status": 404
+      }
+    ]
+  }
+}
