@@ -1,28 +1,124 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { ArrowDownRight, ArrowUpRight, Boxes, LayoutDashboard, Leaf, Pencil, Plus, Search, Trash2 } from "lucide-react";
-import { fixtureProducts } from "@/lib/data/products";
-import { getProducts, saveProducts } from "@/lib/data/store";
-import { isXanoConfigured } from "@/lib/api/client";
-import type { Category, Product, ProductUnit } from "@/types/product";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowDownRight, ArrowUpRight, Boxes, LoaderCircle, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
+import { productApi } from "@/lib/api/products";
+import { errorMessage, isAuthorizationError } from "@/lib/api/client";
+import { categoryLabel } from "@/lib/api/mappers";
+import { publishCatalogChange } from "@/lib/catalog-events";
+import { useCatalog } from "@/lib/use-catalog";
+import { AdminErrorState, AdminLoadingState, useAdminSession } from "./admin-session";
+import { AdminImage, AdminShell, Status } from "./admin-shell";
+import { ProductFormPage } from "./product-form";
+import type { Product } from "@/types/product";
 
-function AdminSidebar(){const path=usePathname();const links=[["/admin",<LayoutDashboard key="dashboard"/>,"Контролна табла"],["/admin/products",<Boxes key="products"/>,"Производи"]] as const;return <aside className="admin-sidebar"><Link className="admin-logo" href="/">Tropiko<small>ОВОШЕН РАЈ · АДМИН</small></Link><span className="admin-nav-label">ПРОДАВНИЦА</span><nav className="admin-nav">{links.map(([href,icon,label])=><Link key={href} href={href} aria-current={path===href||href!=="/admin"&&path.startsWith(href)?"page":undefined}>{icon}{label}</Link>)}<Link href="/" target="_blank"> <Leaf/>Отвори продавница</Link></nav><div className="admin-side-note">Развојен преглед · Податоците засега се чуваат во овој прелистувач.</div></aside>}
-function AdminHeader(){return <header className="admin-header"><strong>Тропико · Администрација</strong><div className="admin-header-right"><span>Развојна околина</span><div className="admin-avatar">Т</div></div></header>}
-function AdminShell({children}:{children:React.ReactNode}){return <div className="admin-shell"><AdminSidebar/><div className="admin-main"><AdminHeader/>{children}</div></div>}
-function DevelopmentNotice(){return <div className="dev-banner"><strong>Развојен преглед.</strong> Админските промени се чуваат локално во овој прелистувач. {isXanoConfigured()?"Xano URL е поставен; поврзувањето со вистинската API документација е сѐ уште во подготовка.":"Xano сѐ уште не е конфигуриран. Операциите не се испраќаат до база."}</div>}
-function Status({children,type}:{children:React.ReactNode;type:"good"|"out"|"sale"}){return <span className={`status-badge ${type}`}>{children}</span>}
-function AdminImage({src}:{src:string}){return <Image src={src} alt="" width={42} height={42} className="mini-image" unoptimized/>}
+export function AdminDashboard() {
+  const session = useAdminSession();
+  const { products, loading, error, reload } = useCatalog({ enabled: session.status === "authenticated", adminToken: session.token, onUnauthorized: session.logout });
+  const available = products.filter(product => product.is_available).length;
+  return <AdminShell><main className="admin-content">
+    <div className="admin-breadcrumb">Администрација / Преглед</div>
+    <div className="admin-title-row"><div><h1>Контролна табла</h1><p>Преглед на тековната понуда во вашата продавница.</p></div><Link className="admin-button" href="/admin/products/new"><Plus/>Додај производ</Link></div>
+    {error ? <AdminErrorState message={error} retry={reload}/> : loading && products.length === 0 ? <AdminLoadingState message="Се вчитува каталогот..."/> : <>
+      <section className="stat-grid" aria-label="Преглед на производи">
+        <div className="stat-card"><Boxes className="stat-icon"/><div className="stat-label">Производи во каталогот</div><div className="stat-value">{products.length}</div><div className="stat-hint">Тековна понуда</div></div>
+        <div className="stat-card"><ArrowUpRight className="stat-icon"/><div className="stat-label">Достапни производи</div><div className="stat-value">{available}</div><div className="stat-hint">Подготвени за купувачите</div></div>
+        <div className="stat-card"><ArrowDownRight className="stat-icon"/><div className="stat-label">Нема на залиха</div><div className="stat-value">{products.length - available}</div><div className="stat-hint">Видливи во каталогот</div></div>
+      </section>
+      <section className="panel"><div className="panel-heading"><h2>Производи во понуда</h2><Link className="text-link" href="/admin/products">Сите производи →</Link></div><div className="panel-body recent-list">{products.slice(0, 5).map(product => <div className="recent-row" key={product.id}><AdminImage src={product.imageUrl}/><div><strong>{product.name}</strong><small>{categoryLabel(product)} · {product.salePrice ?? product.price} ден/{product.unit}</small></div><Status type={product.is_available ? "good" : "out"}>{product.is_available ? "Достапно" : "Нема на залиха"}</Status>{product.salePrice && <Status type="sale">Акција</Status>}</div>)}{products.length === 0 && <div className="admin-empty-state">Нема производи. Додајте го првиот производ за да ја започнете понудата.</div>}</div></section>
+    </>}
+  </main></AdminShell>;
+}
 
-export function AdminDashboard(){const [products,setProducts]=useState<Product[]>(fixtureProducts);useEffect(()=>setProducts(getProducts()),[]);const available=products.filter(p=>p.is_available).length;const out=products.length-available;return <AdminShell><main className="admin-content"><DevelopmentNotice/><div className="admin-breadcrumb">Администрација / Преглед</div><div className="admin-title-row"><div><h1>Контролна табла</h1><p>Добредојдовте! Еве го прегледот на вашиот каталог.</p></div><Link className="admin-button" href="/admin/products/new"><Plus/>Додај производ</Link></div><section className="stat-grid" aria-label="Пример преглед на производи"><div className="stat-card"><Boxes className="stat-icon"/><div className="stat-label">Производи во каталогот</div><div className="stat-value">{products.length}</div><div className="stat-hint">Пример податоци за дизајн</div></div><div className="stat-card"><ArrowUpRight className="stat-icon"/><div className="stat-label">Достапни производи</div><div className="stat-value">{available}</div><div className="stat-hint">{products.length?Math.round(available/products.length*100):0}% од примерот</div></div><div className="stat-card"><ArrowDownRight className="stat-icon"/><div className="stat-label">Нема на залиха</div><div className="stat-value">{out}</div><div className="stat-hint">Пример состојба</div></div></section><section className="panel"><div className="panel-heading"><h2>Последни производи</h2><Link className="text-link" href="/admin/products">Сите производи →</Link></div><div className="panel-body recent-list">{products.slice(0,5).map(p=><div className="recent-row" key={p.id}><AdminImage src={p.imageUrl} /><div><strong>{p.name}</strong><small>{p.category==="fruit"?"Овошје":"Зеленчук"} · {p.price} ден/{p.unit}</small></div><Status type={p.is_available?"good":"out"}>{p.is_available?"Достапно":"Нема на залиха"}</Status>{p.salePrice&&<Status type="sale">Акција</Status>}</div>)}</div></section></main></AdminShell>}
+export function AdminProducts() {
+  const session = useAdminSession();
+  const { products, setProducts, loading, error, reload } = useCatalog({ enabled: session.status === "authenticated", adminToken: session.token, onUnauthorized: session.logout });
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("all");
+  const [availability, setAvailability] = useState("all");
+  const [notice, setNotice] = useState("");
+  const [writeError, setWriteError] = useState("");
+  const [pending, setPending] = useState<string | null>(null);
+  const mutationInFlight = useRef(false);
+  const visible = useMemo(() => products.filter(product => product.name.toLocaleLowerCase("mk").includes(query.trim().toLocaleLowerCase("mk")) && (category === "all" || product.category === category) && (availability === "all" || product.is_available === (availability === "available"))), [products, query, category, availability]);
 
-export function AdminProducts(){const [products,setProducts]=useState<Product[]>(fixtureProducts);const [query,setQuery]=useState("");const [category,setCategory]=useState("all");const [availability,setAvailability]=useState("all");const [notice,setNotice]=useState("");useEffect(()=>setProducts(getProducts()),[]);const visible=useMemo(()=>products.filter(p=>p.name.toLocaleLowerCase("mk").includes(query.toLocaleLowerCase("mk"))&&(category==="all"||p.category===category)&&(availability==="all"||p.is_available===(availability==="available"))),[products,query,category,availability]);function update(next:Product[]){setProducts(next);saveProducts(next)}function toggle(product:Product){update(products.map(p=>p.id===product.id?{...p,is_available:!p.is_available}:p));setNotice(`Пример состојбата за „${product.name}“ е ажурирана локално.`)}function remove(product:Product){if(!window.confirm(`Да го избришете „${product.name}“ од каталогот? Ова ќе го отстрани производот.`))return;update(products.filter(p=>p.id!==product.id));setNotice(`„${product.name}“ е отстранет од локалните развојни податоци.`)}return <AdminShell><main className="admin-content"><DevelopmentNotice/><div className="admin-breadcrumb">Администрација / Каталог</div><div className="admin-title-row"><div><h1>Производи</h1><p>Управувајте со цените, достапноста и понудата.</p></div><Link className="admin-button" href="/admin/products/new"><Plus/>Додај производ</Link></div>{notice&&<div className="dev-banner" role="status">{notice}</div>}<section className="panel"><div className="toolbar"><label className="admin-search"><Search size={15}/><span className="sr-only">Пребарај производи</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Пребарај по име..."/></label><select className="admin-select" aria-label="Филтрирај по категорија" value={category} onChange={e=>setCategory(e.target.value)}><option value="all">Сите категории</option><option value="fruit">Овошје</option><option value="vegetable">Зеленчук</option></select><select className="admin-select" aria-label="Филтрирај по достапност" value={availability} onChange={e=>setAvailability(e.target.value)}><option value="all">Секоја достапност</option><option value="available">Достапни</option><option value="out">Нема на залиха</option></select></div><div className="table-wrap"><table className="product-table"><thead><tr><th>ПРОИЗВОД</th><th>КАТЕГОРИЈА</th><th>ЦЕНА</th><th>ДОСТАПНОСТ</th><th>АКЦИЈА</th><th>ПРОМЕНИ</th></tr></thead><tbody>{visible.map(p=><tr key={p.id}><td><div className="table-product"><AdminImage src={p.imageUrl} /><strong>{p.name}</strong></div></td><td>{p.category==="fruit"?"Овошје":"Зеленчук"}</td><td>{p.salePrice?<><s>{p.price}</s> <strong>{p.salePrice}</strong></>:p.price} ден/{p.unit}</td><td><Status type={p.is_available?"good":"out"}>{p.is_available?"Достапно":"Нема на залиха"}</Status></td><td>{p.salePrice?<Status type="sale">Акција</Status>:"—"}</td><td><div className="table-actions"><button className={`toggle ${p.is_available?"on":""}`} aria-label={`${p.is_available?"Означи дека нема на залиха":"Означи како достапен"}: ${p.name}`} aria-pressed={p.is_available} onClick={()=>toggle(p)}><span/></button><Link className="small-action" href={`/admin/products/${p.id}/edit`} aria-label={`Уреди ${p.name}`}><Pencil/></Link><button className="small-action danger" aria-label={`Избриши ${p.name}`} onClick={()=>remove(p)}><Trash2/></button></div></td></tr>)}</tbody></table>{visible.length===0&&<div className="empty-table">Нема производи што одговараат на избраните филтри.</div>}</div></section></main></AdminShell>}
+  async function toggle(product: Product) {
+    if (!session.token || mutationInFlight.current) return;
+    mutationInFlight.current = true; setPending(product.id); setNotice(""); setWriteError("");
+    try {
+      const updated = await productApi.setAvailability(product.id, !product.is_available, session.token);
+      setProducts(current => current.map(item => item.id === product.id ? updated : item));
+      setNotice(`Достапноста за „${product.name}“ е зачувана.`); publishCatalogChange();
+    } catch (cause) { if (isAuthorizationError(cause)) session.logout(); else setWriteError(errorMessage(cause)); }
+    finally { mutationInFlight.current = false; setPending(null); }
+  }
+  async function remove(product: Product) {
+    if (!session.token || mutationInFlight.current) return;
+    if (!window.confirm(`Да го избришете „${product.name}“? Ова го отстранува производот од каталогот.`)) return;
+    mutationInFlight.current = true; setPending(product.id); setNotice(""); setWriteError("");
+    try {
+      const result = await productApi.remove(product.id, session.token);
+      if (!result.success) throw new Error("Производот не е избришан. Обидете се повторно.");
+      setProducts(current => current.filter(item => item.id !== product.id));
+      setNotice(`„${product.name}“ е избришан од каталогот.`); publishCatalogChange();
+    } catch (cause) { if (isAuthorizationError(cause)) session.logout(); else setWriteError(errorMessage(cause)); }
+    finally { mutationInFlight.current = false; setPending(null); }
+  }
 
-const defaultForm={name:"",category:"fruit" as Category,price:"",unit:"кг" as ProductUnit,imageUrl:"",description:"",is_available:true,salePrice:"",displayOrder:""};
-function ProductFormPage({productId}:{productId?:string}){const router=useRouter();const [form,setForm]=useState(defaultForm);const [products,setProducts]=useState<Product[]>(fixtureProducts);const [errors,setErrors]=useState<Record<string,string>>({});const [feedback,setFeedback]=useState("");const [saving,setSaving]=useState(false);const editing=Boolean(productId);useEffect(()=>{const saved=getProducts();setProducts(saved);const product=saved.find(p=>p.id===productId);if(product)setForm({name:product.name,category:product.category,price:String(product.price),unit:product.unit,imageUrl:product.imageUrl,description:product.description??"",is_available:product.is_available,salePrice:product.salePrice?String(product.salePrice):"",displayOrder:product.displayOrder?String(product.displayOrder):""});else if(productId)setFeedback("Производот не е најден во пример податоците.")},[productId]);function change<K extends keyof typeof defaultForm>(key:K,value:(typeof defaultForm)[K]){setForm(old=>({...old,[key]:value}));setErrors(old=>({...old,[key]:""}))}function submit(e:FormEvent){e.preventDefault();const nextErrors:Record<string,string>={};if(!form.name.trim())nextErrors.name="Внесете име на производот.";if(!form.imageUrl.trim())nextErrors.imageUrl="Внесете URL на фотографија.";else try{new URL(form.imageUrl)}catch{nextErrors.imageUrl="Внесете валиден URL."}const price=Number(form.price),sale=form.salePrice?Number(form.salePrice):undefined;if(!form.price||!Number.isFinite(price)||price<=0)nextErrors.price="Цената мора да биде поголема од нула.";if(form.salePrice&&(!Number.isFinite(sale)||sale!<=0||sale!>=price))nextErrors.salePrice="Акциската цена треба да биде позитивна и пониска од редовната.";setErrors(nextErrors);if(Object.keys(nextErrors).length)return;setSaving(true);window.setTimeout(()=>{const id=productId??`dev-${Date.now()}`;const nextProduct:Product={id,name:form.name.trim(),category:form.category,price,unit:form.unit,imageUrl:form.imageUrl.trim(),description:form.description.trim()||undefined,is_available:form.is_available,salePrice:sale,displayOrder:form.displayOrder?Number(form.displayOrder):undefined};const next=productId?products.map(p=>p.id===productId?nextProduct:p):[...products,nextProduct];saveProducts(next);setSaving(false);router.push("/admin/products");},180)}return <AdminShell><main className="admin-content"><DevelopmentNotice/><div className="admin-breadcrumb">Администрација / Производи / {editing?"Уреди":"Нов производ"}</div><div className="admin-title-row"><div><h1>{editing?"Уреди производ":"Додај производ"}</h1><p>{editing?"Ажурирајте ги информациите и цената.":"Внесете ги деталите за новиот производ."}</p></div></div>{feedback&&<div className="dev-banner">{feedback}</div>}<form className="admin-form" onSubmit={submit} noValidate><div className="form-grid"><div className="form-field"><label htmlFor="product-name">Име на производ *</label><input id="product-name" value={form.name} onChange={e=>change("name",e.target.value)} placeholder="На пр. Портокал"/>{errors.name&&<span className="form-error">{errors.name}</span>}</div><div className="form-field"><label htmlFor="product-category">Категорија *</label><select id="product-category" value={form.category} onChange={e=>change("category",e.target.value as Category)}><option value="fruit">Овошје</option><option value="vegetable">Зеленчук</option></select></div><div className="form-field"><label htmlFor="product-price">Цена (ден) *</label><input id="product-price" inputMode="decimal" type="number" min="0.01" step="0.01" value={form.price} onChange={e=>change("price",e.target.value)} placeholder="80"/>{errors.price&&<span className="form-error">{errors.price}</span>}</div><div className="form-field"><label htmlFor="product-unit">Единица *</label><select id="product-unit" value={form.unit} onChange={e=>change("unit",e.target.value as ProductUnit)}><option value="кг">ден/кг</option><option value="парче">ден/парче</option><option value="пакување">ден/пакување</option></select></div><div className="form-field full"><label htmlFor="product-image">URL на слика *</label><input id="product-image" type="url" value={form.imageUrl} onChange={e=>change("imageUrl",e.target.value)} placeholder="https://..."/><small>Внесете URL до фотографијата. Прикачувањето слики ќе зависи од Xano API.</small>{errors.imageUrl&&<span className="form-error">{errors.imageUrl}</span>}</div><div className="form-field"><label htmlFor="product-sale">Акциска цена (по избор)</label><input id="product-sale" type="number" min="0.01" step="0.01" value={form.salePrice} onChange={e=>change("salePrice",e.target.value)} placeholder="—"/>{errors.salePrice&&<span className="form-error">{errors.salePrice}</span>}</div><div className="form-field"><label htmlFor="product-order">Редослед на прикажување</label><input id="product-order" type="number" min="0" value={form.displayOrder} onChange={e=>change("displayOrder",e.target.value)} placeholder="Автоматски"/></div><div className="form-field full"><label htmlFor="product-description">Опис</label><textarea id="product-description" value={form.description} onChange={e=>change("description",e.target.value)} placeholder="Краток опис (по избор)"/></div><label className="checkbox-row form-field full"><input type="checkbox" checked={form.is_available} onChange={e=>change("is_available",e.target.checked)}/>Достапен за купувачите</label><div className="form-actions"><Link className="admin-button secondary" href="/admin/products">Откажи</Link><button className="admin-button" type="submit" disabled={saving}>{saving?"Се зачувува...":editing?"Зачувај промени":"Додај производ"}</button></div></div></form></main></AdminShell>}
-export function NewProductPage(){return <ProductFormPage/>}export function EditProductPage({id}:{id:string}){return <ProductFormPage productId={id}/>}
+  return <AdminShell><main className="admin-content">
+    <div className="admin-breadcrumb">Администрација / Каталог</div>
+    <div className="admin-title-row"><div><h1>Производи</h1><p>Управувајте со фотографиите, цените и достапноста.</p></div><Link className="admin-button" href="/admin/products/new"><Plus/>Додај производ</Link></div>
+    {notice && <div className="admin-success-state" role="status">{notice}</div>}
+    {writeError && <AdminErrorState message={writeError}/>}
+    {error && <AdminErrorState message={error} retry={reload}/>}
+    <section className="panel"><div className="toolbar">
+      <label className="admin-search"><Search size={15}/><span className="sr-only">Пребарај производи</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Пребарај по име..."/></label>
+      <select className="admin-select" aria-label="Филтрирај по категорија" value={category} onChange={event => setCategory(event.target.value)}><option value="all">Сите категории</option><option value="fruit">Овошје</option><option value="vegetable">Зеленчук</option><option value="other">Други категории</option></select>
+      <select className="admin-select" aria-label="Филтрирај по достапност" value={availability} onChange={event => setAvailability(event.target.value)}><option value="all">Секоја достапност</option><option value="available">Достапни</option><option value="out">Нема на залиха</option></select>
+    </div>
+    {loading && products.length === 0 ? <AdminLoadingState message="Се вчитуваат производите..."/> : <div className="table-wrap"><table className="product-table"><thead><tr><th>ПРОИЗВОД</th><th>КАТЕГОРИЈА</th><th>ЦЕНА</th><th>ДОСТАПНОСТ</th><th>АКЦИЈА</th><th>ПРОМЕНИ</th></tr></thead><tbody>{visible.map(product => <tr key={product.id} aria-busy={pending === product.id}>
+      <td><div className="table-product"><AdminImage src={product.imageUrl}/><strong>{product.name}</strong></div></td>
+      <td data-label="Категорија">{categoryLabel(product)}</td><td data-label="Цена">{product.salePrice ? <><s>{product.price}</s> <strong>{product.salePrice}</strong></> : product.price} ден/{product.unit}</td>
+      <td data-label="Достапност"><Status type={product.is_available ? "good" : "out"}>{product.is_available ? "Достапно" : "Нема на залиха"}</Status></td>
+      <td data-label="Акција">{product.salePrice ? <Status type="sale">Акција</Status> : "—"}</td>
+      <td><div className="table-actions"><button className={`toggle ${product.is_available ? "on" : ""}`} disabled={pending !== null} aria-label={`${product.is_available ? "Означи дека нема на залиха" : "Означи како достапен"}: ${product.name}`} aria-pressed={product.is_available} onClick={() => { void toggle(product); }}><span/></button><Link className="small-action" href={`/admin/products/${product.id}/edit`} aria-label={`Уреди ${product.name}`}><Pencil/></Link><button className="small-action danger" disabled={pending !== null} aria-label={`Избриши ${product.name}`} onClick={() => { void remove(product); }}>{pending === product.id ? <LoaderCircle className="loading-spinner"/> : <Trash2/>}</button></div></td>
+    </tr>)}</tbody></table>{visible.length === 0 && !error && <div className="empty-table">{products.length === 0 ? "Нема производи во каталогот. Додајте го првиот производ." : "Нема производи што одговараат на избраните филтри."}</div>}</div>}
+    </section>
+  </main></AdminShell>;
+}
 
-export function AdminLogin(){const [message,setMessage]=useState("");function submit(e:FormEvent){e.preventDefault();setMessage("Пријавувањето ќе се овозможи откако ќе ја поврземе автентикацијата според Xano документацијата.")}return <main className="login-page"><form className="login-card" onSubmit={submit}><Link href="/" className="admin-logo">Tropiko<small>ОВОШЕН РАЈ · АДМИН</small></Link><p>Најавете се за да управувате со каталогот.</p><div className="dev-banner">Развојен преглед — најава не е поврзана со сервер.</div><div className="form-field"><label htmlFor="admin-email">Е-пошта</label><input id="admin-email" type="email" required autoComplete="username" placeholder="admin@..."/></div><div className="form-field"><label htmlFor="admin-password">Лозинка</label><input id="admin-password" type="password" required autoComplete="current-password" placeholder="••••••••"/></div><button className="admin-button" type="submit">Најави се</button>{message&&<div className="form-feedback" role="status">{message}</div>}</form></main>}
+export function NewProductPage() { return <ProductFormPage/>; }
+export function EditProductPage({ id }: { id: string }) { return <ProductFormPage productId={id}/>; }
+
+function destination() {
+  const next = new URLSearchParams(window.location.search).get("next");
+  return next && (next === "/admin" || next.startsWith("/admin/")) && !next.startsWith("/admin/login") ? next : "/admin";
+}
+export function AdminLogin() {
+  const session = useAdminSession();
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const submitting = useRef(false);
+  useEffect(() => { if (session.status === "authenticated") router.replace(destination()); }, [session.status, router]);
+  async function submit(event: FormEvent) {
+    event.preventDefault(); if (submitting.current) return;
+    submitting.current = true; setBusy(true); setError("");
+    try { await session.login({ email: email.trim(), password }); router.replace(destination()); }
+    catch (cause) { setError(errorMessage(cause)); }
+    finally { submitting.current = false; setBusy(false); }
+  }
+  return <main className="login-page"><form className="login-card" onSubmit={submit}><Link href="/" className="admin-logo"><BrandLogo/><small>ПАНЕЛ ЗА ПРОДАВНИЦАТА</small></Link><p>Најавете се со вашиот администраторски профил.</p>
+    <div className="form-field"><label htmlFor="admin-email">Е-пошта</label><input id="admin-email" type="email" required autoComplete="username" value={email} onChange={event => setEmail(event.target.value)} disabled={busy}/></div>
+    <div className="form-field"><label htmlFor="admin-password">Лозинка</label><input id="admin-password" type="password" required autoComplete="current-password" value={password} onChange={event => setPassword(event.target.value)} disabled={busy}/></div>
+    <button className="admin-button" type="submit" disabled={busy || session.status === "loading"}>{busy ? <><LoaderCircle className="loading-spinner" size={15}/>Се најавува...</> : "Најави се"}</button>
+    <p><Link className="text-link" href="/admin/forgot-password">Ја заборавивте лозинката?</Link></p>
+    <p><Link className="text-link" href="/admin/register">Создај нов профил</Link></p>
+    {(error || session.error) && <div className="admin-error-state" role="alert">{error || session.error}</div>}
+  </form></main>;
+}

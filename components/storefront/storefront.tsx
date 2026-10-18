@@ -1,40 +1,43 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Apple, Carrot, Check, Leaf } from "lucide-react";
+import { Apple, ArrowRight, ArrowUpRight, Carrot, Check, Clock3, Leaf, MapPin, Phone, Sprout } from "lucide-react";
 import { copy } from "@/lib/content";
-import { fixtureProducts } from "@/lib/data/products";
 import { ProductCatalog } from "@/components/storefront/product-catalog";
 import { MobileNavigation } from "@/components/storefront/mobile-navigation";
-import type { Category, Product } from "@/types/product";
+import { BrandLogo } from "@/components/brand-logo";
+import type { Category } from "@/types/product";
 
 export function Navbar() {
-  return <header className="site-header"><div className="nav-shell"><Link className="brand" href="/" aria-label="Тропико — почетна"><span className="brand-fruit">✿</span><span className="brand-name">Tropiko</span><span className="brand-tag">ОВОШЕН РАЈ</span></Link><MobileNavigation/><Link href="#products" className="header-catalog">Производи <span>→</span></Link></div></header>;
+  return <header className="site-header"><div className="nav-shell">
+      <Link className="brand" href="/" aria-label={`${copy.shopName} — почетна`}><BrandLogo priority/><span className="brand-wordmark">Banana<span>Makovo</span></span></Link>
+      <MobileNavigation/>
+      <Link href="/#products" className="header-catalog">Нашата понуда<ArrowUpRight size={16}/></Link>
+    </div></header>;
 }
 
 export function HeroSection() {
-  return <section className="hero"><div className="hero-content"><p className="eyebrow"><Leaf size={15}/> СЕЗОНСКО · СВЕЖО · ЛОКАЛНО</p><h1>Свежина секој ден<span>!</span></h1><p className="hero-description">{copy.heroDescription}</p><Link href="#products" className="hero-cta">Погледни ги производите <span>→</span></Link></div></section>;
+  return <section className="hero"><div className="hero-shell">
+    <div className="hero-content">
+      <h1>{copy.hero.title}<br/><span>{copy.hero.accent}</span></h1>
+      <p className="hero-description">{copy.hero.description}</p>
+      <div className="hero-actions"><Link href="#products" className="hero-cta">{copy.hero.action}<ArrowRight size={17}/></Link></div>
+    </div>
+    <div className="hero-categories">
+      <Link href="/fruit" className="category-tile fruit-tile"><Apple className="category-tile-icon" strokeWidth={1.3} aria-hidden="true"/><h2>{copy.nav.fruit}</h2><p>{copy.hero.fruitNote}</p><span className="tile-arrow"><ArrowUpRight size={19}/></span></Link>
+      <Link href="/vegetables" className="category-tile vegetable-tile"><Carrot className="category-tile-icon" strokeWidth={1.3} aria-hidden="true"/><h2>{copy.nav.vegetables}</h2><p>{copy.hero.vegetableNote}</p><span className="tile-arrow"><ArrowUpRight size={19}/></span></Link>
+    </div>
+  </div><div className="benefit-strip">{copy.hero.benefits.map(benefit => <span key={benefit}><Check size={14} aria-hidden="true"/>{benefit}</span>)}</div></section>;
 }
 
-function PriceLabel({product}:{product:Product}) { return <div className="price-wrap">{product.salePrice ? <><span className="price-old">{product.price} ден</span><span className="price-label">{product.salePrice} ден/{product.unit}</span></> : <span className="price-label">{product.price} ден/{product.unit}</span>}</div>; }
-function productImageSource(source:string):string {
-  try {
-    const url=new URL(source);
-    if(url.hostname==="images.unsplash.com"){
-      url.searchParams.set("w","480");url.searchParams.set("h","360");url.searchParams.set("fit","crop");url.searchParams.set("crop","entropy");url.searchParams.set("q","72");
-    }
-    return url.toString();
-  } catch { return source; }
+export function ProductCatalogServer({ initialCategory, showHero = true, saleOnly = false }: { initialCategory?: Category; showHero?: boolean; saleOnly?: boolean }) {
+  const title = saleOnly ? copy.catalog.saleTitle : initialCategory === "fruit" ? copy.catalog.fruitTitle : initialCategory === "vegetable" ? copy.catalog.vegetableTitle : copy.catalog.title;
+  return <>{showHero && <HeroSection/>}<main className={`catalog ${showHero ? "" : "catalog-page"}`} id="products"><div className="section-heading"><h2>{title}</h2></div><ProductCatalog initialCategory={initialCategory} saleOnly={saleOnly}/></main></>;
 }
-export function ProductCard({product}:{product:Product}) {
-  const discount=product.salePrice?Math.round((1-product.salePrice/product.price)*100):0;
-  return <article className={`product-card ${product.is_available?"":"is-unavailable"}`}><div className="product-image"><Image src={productImageSource(product.imageUrl)} alt={product.name} width={480} height={360} sizes="(max-width: 620px) 45vw, (max-width: 950px) 30vw, 23vw" unoptimized loading="lazy"/><span className="product-leaf" aria-hidden="true">✦</span>{discount>0&&<span className="sale-badge">−{discount}%</span>}{!product.is_available&&<span className="stock-badge">Нема на залиха</span>}</div><div className="product-info"><h3>{product.name}</h3><PriceLabel product={product}/><div className={`availability ${product.is_available?"available":"unavailable"}`}>{product.is_available?<><Check size={13}/> Свежо и достапно</>:"Нема на залиха"}</div></div></article>;
-}
-export function ProductGrid({products}:{products:Product[]}) { return <div className="product-grid">{products.map(product=><ProductCard key={product.id} product={product}/>)}</div>; }
-export function ProductCatalogServer({initialCategory,showHero=true,query="",saleOnly=false}:{initialCategory?:Category;showHero?:boolean;query?:string;saleOnly?:boolean}) {
-  const initial=fixtureProducts.filter(p=>(!initialCategory||p.category===initialCategory)&&(!saleOnly||Boolean(p.salePrice))&&p.name.toLocaleLowerCase("mk").includes(query.trim().toLocaleLowerCase("mk"))).sort((a,b)=>(a.displayOrder??0)-(b.displayOrder??0));
-  return <>{showHero&&<HeroSection/>}<main className="catalog" id="products"><div className="section-heading"><p className="eyebrow">ДИРЕКТНО ОД ПАЗАРОТ</p><h2>{saleOnly?"Сезонски акции":initialCategory==="fruit"?"Нашето овошје":initialCategory==="vegetable"?"Свеж зеленчук":"Избрано со љубов"}</h2><p>Свежи вкусови за вашата трпеза, секој ден.</p></div><ProductCatalog initialProducts={initial} initialCategory={initialCategory} query={query} saleOnly={saleOnly}/></main></>;
-}
-export function StoreFooter(){return <footer className="site-footer"><span className="footer-brand">Tropiko</span><p>{copy.footerSlogan}</p></footer>;}
-export function ContactPage(){return <main className="contact-page"><div className="section-heading"><p className="eyebrow">ТУКА СМЕ ЗА ВАС</p><h1>Контакт</h1><p>За свежи идеи и прашања, со задоволство ќе ве пречекаме.</p></div><section className="contact-card"><span className="contact-mark">✿</span><h2>{copy.shopName}</h2><dl><div><dt>Адреса</dt><dd>{copy.address}</dd></div><div><dt>Телефон</dt><dd>{copy.phone}</dd></div><div><dt>Работно време</dt><dd>{copy.hours}</dd></div></dl><span className="contact-link">Контакт информациите ќе бидат ажурирани наскоро</span></section></main>;}
 
-export { Apple, Carrot };
+export function StoreFooter() {
+  return <footer className="site-footer"><div className="footer-shell"><div className="footer-message"><Sprout size={26} strokeWidth={1.5}/><h2>{copy.footer.title}<br/><span>{copy.footer.accent}</span></h2><p>{copy.footer.description}</p></div><div className="footer-navigation"><p>{copy.footer.navLabel}</p><nav aria-label="Навигација во подножје"><Link href="/fruit">{copy.nav.fruit}<ArrowUpRight size={14}/></Link><Link href="/vegetables">{copy.nav.vegetables}<ArrowUpRight size={14}/></Link><Link href="/sale">{copy.nav.sale}<ArrowUpRight size={14}/></Link><Link href="/contact">{copy.nav.contact}<ArrowUpRight size={14}/></Link></nav></div></div><div className="footer-bottom"><span className="footer-brand">{copy.shopName}<span>© {new Date().getFullYear()}</span></span><span>{copy.footer.note}<Leaf size={13}/></span></div></footer>;
+}
+
+export function ContactPage() {
+  const details = [{ icon: MapPin, label: copy.contact.address, value: copy.address }, { icon: Phone, label: copy.contact.phone, value: copy.phone }, { icon: Clock3, label: copy.contact.hours, value: copy.hours }];
+  return <main className="contact-page"><div className="contact-intro"><p className="eyebrow">{copy.contact.eyebrow}</p><h1>{copy.contact.title}</h1><p>{copy.contact.description}</p><Link className="hero-secondary" href="/">{copy.contact.back}<ArrowUpRight size={16}/></Link></div><div className="contact-details">{details.map(({ icon: Icon, label, value }) => <section className="contact-card" key={label}><span className="contact-icon"><Icon size={22} strokeWidth={1.5}/></span><div><h2>{label}</h2><p>{value}</p></div></section>)}<p className="contact-note"><Leaf size={14}/>{copy.contact.note}</p></div></main>;
+}

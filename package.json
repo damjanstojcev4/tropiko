@@ -1,5 +1,5 @@
 {
-  "name": "tropiko-produce-shop",
+  "name": "banana-makovo-produce-shop",
   "version": "1.0.0",
   "private": true,
   "scripts": { "dev": "next dev", "build": "next build", "start": "next start", "lint": "eslint app components lib types next.config.ts" },

@@ -1,17 +1,32 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Apple, Carrot } from "lucide-react";
+import { useMemo } from "react";
 import Link from "next/link";
-import { getProducts } from "@/lib/data/store";
-import { ProductGrid } from "@/components/storefront/storefront";
-import type { Category, Product } from "@/types/product";
+import { Apple, Carrot, LayoutGrid, Leaf } from "lucide-react";
+import { copy } from "@/lib/content";
+import { useCatalog } from "@/lib/use-catalog";
+import { ProductGrid } from "@/components/storefront/product-grid";
+import type { Category } from "@/types/product";
 
-export function ProductCatalog({initialProducts,initialCategory,query,saleOnly}:{initialProducts:Product[];initialCategory?:Category;query:string;saleOnly:boolean}) {
-  const [products,setProducts]=useState(initialProducts);
-  const [filter,setFilter]=useState<"all"|Category>(initialCategory??"all");
-  useEffect(()=>{const saved=getProducts();setProducts(saved.filter(p=>(!initialCategory||p.category===initialCategory)&&(!saleOnly||Boolean(p.salePrice))&&p.name.toLocaleLowerCase("mk").includes(query.trim().toLocaleLowerCase("mk"))));},[initialCategory,query,saleOnly]);
-  const visible=useMemo(()=>products.filter(p=>(filter==="all"||p.category===filter)&&(!saleOnly||Boolean(p.salePrice))).sort((a,b)=>(a.displayOrder??0)-(b.displayOrder??0)),[products,filter,saleOnly]);
-  const filters:[["all"|Category,string,React.ReactNode,string],...["fruit"|"vegetable",string,React.ReactNode,string][]]=[["all","Сите",null,"/"],["fruit","Овошје",<Apple size={19} key="fruit"/>,"/fruit"],["vegetable","Зеленчук",<Carrot size={19} key="vegetable"/>,"/vegetables"]];
-  return <><nav className="category-filters" aria-label="Филтрирај производи">{filters.map(([value,label,icon,href])=><Link key={value} href={href} className={`filter-pill ${filter===value?"active":""}`} aria-current={filter===value?"page":undefined} onClick={value==="all"?()=>setFilter("all"):undefined}>{icon}{label}</Link>)}</nav><ProductGrid products={visible}/>{visible.length===0&&<div className="empty-results"><h3>Не пронајдовме производи</h3><p>Обидете се со друга категорија.</p></div>}<p className="fixture-note"><span/> Прикажани се пример производи за преглед на дизајнот.</p></>;
+const filters = [
+  { value: "all", label: copy.catalog.all, href: "/", icon: LayoutGrid },
+  { value: "fruit", label: copy.nav.fruit, href: "/fruit", icon: Apple },
+  { value: "vegetable", label: copy.nav.vegetables, href: "/vegetables", icon: Carrot },
+] as const;
+
+export function ProductCatalog({ initialCategory, saleOnly }: { initialCategory?: Category; saleOnly: boolean }) {
+  const { products, loading, error, reload } = useCatalog({ saleOnly });
+  const visible = useMemo(() => products.filter(product => (!initialCategory || product.category === initialCategory) && (!saleOnly || Boolean(product.salePrice))).sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0) || a.name.localeCompare(b.name, "mk")), [products, initialCategory, saleOnly]);
+
+  return <>
+    <div className="catalog-tools">
+      <nav className="category-filters" aria-label="Филтрирај производи">
+        {filters.map(({ value, label, href, icon: Icon }) => <Link key={value} href={href} className={`filter-pill ${(initialCategory ?? "all") === value ? "active" : ""}`} aria-current={(initialCategory ?? "all") === value ? "page" : undefined}><Icon size={17} aria-hidden="true"/>{label}</Link>)}
+      </nav>
+      <span className="product-count">{loading && products.length === 0 ? "Се вчитува..." : `${String(visible.length).padStart(2, "0")} ${copy.catalog.count}`}</span>
+    </div>
+    {error && <div className="catalog-error" role="alert"><p>{error}</p><button type="button" className="admin-button secondary" onClick={reload}>Обиди се повторно</button></div>}
+    <div aria-busy={loading}>{loading && products.length === 0 ? <div className="product-grid" role="status"><span className="sr-only">Се вчитува понудата...</span>{Array.from({ length: 8 }, (_, index) => <div className="product-skeleton" key={index} aria-hidden="true"><div/><span/><span/></div>)}</div> : <ProductGrid products={visible}/>}</div>
+    {!loading && !error && visible.length === 0 && <div className="empty-results"><Leaf size={28}/><h3>{copy.catalog.emptyTitle}</h3><p>{copy.catalog.emptyDescription}</p></div>}
+  </>;
 }

@@ -1,0 +1,35 @@
+{
+  "checks": [
+    "Live public catalog loads in mobile Chrome with CORS; no fixture fallback",
+    "Unauthenticated admin routes redirect to login",
+    "Invalid credentials show an error without creating a browser session",
+    "Member role is rejected before any product upload or write",
+    "Admin login verifies /auth/me and survives reload; no image URL field",
+    "Invalid MIME type and files above 5 MB are rejected before uploading",
+    "Failed upload prevents product creation and shows the server error",
+    "Multipart file upload precedes JSON save; retry reuses uploaded attachment",
+    "Catalog pagination follows nextPage and maps API units/categories",
+    "Editing price omits image fields and preserves the current photograph",
+    "Removing an existing photo sends the documented remove_image flag",
+    "Failed availability update keeps the previous state",
+    "Availability uses PATCH /admin/products/{id}, not an invented endpoint",
+    "Failed deletion keeps the product visible",
+    "Successful deletion updates admin and the open storefront across tabs",
+    "Unauthorized writes clear the expired session and return to login"
+  ],
+  "browserErrors": [],
+  "liveWrites": 0,
+  "liveCatalogItems": 0,
+  "multipartRequests": [
+    {
+      "field": "file",
+      "bytes": 27828,
+      "boundary": true
+    },
+    {
+      "field": "file",
+      "bytes": 27828,
+      "boundary": true
+    }
+  ]
+}
