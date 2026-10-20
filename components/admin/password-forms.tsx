@@ -29,7 +29,7 @@ export function ForgotPassword() {
     catch (cause) { setError(errorMessage(cause)); }
     finally { inFlight.current = false; setBusy(false); }
   }
-  return <RecoveryCard title="Заборавена лозинка">{sent ? <div className="admin-success-state" role="status">Ако постои профил со оваа е-пошта, ќе добиете врска за нова лозинка. Проверете ја и папката за несакана пошта. Врската важи 60 минути.</div> : <form onSubmit={submit}><p>Внесете ја е-поштата на вашиот профил за да добиете врска за нова лозинка.</p><div className="form-field"><label htmlFor="reset-email">Е-пошта</label><input id="reset-email" type="email" required autoComplete="username" value={email} onChange={event => setEmail(event.target.value)} disabled={busy}/></div><PendingButton busy={busy}>Испрати врска</PendingButton></form>}{error && <AdminErrorState message={error}/>}</RecoveryCard>;
+  return <RecoveryCard title="Заборавена лозинка">{sent ? <div className="admin-success-state" role="status">Ако постои профил со оваа е-пошта, ќе добиете врска за нова лозинка. Проверете ја и папката за несакана пошта.</div> : <form onSubmit={submit}><p>Внесете ја е-поштата на вашиот профил за да добиете врска за нова лозинка.</p><div className="form-field"><label htmlFor="reset-email">Е-пошта</label><input id="reset-email" type="email" required autoComplete="username" value={email} onChange={event => setEmail(event.target.value)} disabled={busy}/></div><PendingButton busy={busy}>Испрати врска</PendingButton></form>}{error && <AdminErrorState message={error}/>}</RecoveryCard>;
 }
 
 function PasswordFields({ busy, password, confirmation, setPassword, setConfirmation }: { busy: boolean; password: string; confirmation: string; setPassword: (value: string) => void; setConfirmation: (value: string) => void }) {
@@ -42,7 +42,6 @@ function passwordError(password: string, confirmation: string) {
 }
 
 export function ResetPassword() {
-  const [link, setLink] = useState<{ magicToken: string; email: string } | null>(null);
   const [ready, setReady] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [password, setPassword] = useState("");
@@ -51,35 +50,27 @@ export function ResetPassword() {
   const [complete, setComplete] = useState(false);
   const [invalid, setInvalid] = useState(false);
   const [error, setError] = useState("");
-  const initialized = useRef(false);
   const inFlight = useRef(false);
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-    const query = new URLSearchParams(window.location.search);
-    const magicToken = query.get("magic_token"), email = query.get("email");
-    if (magicToken && email) setLink({ magicToken, email });
-    // Remove the one-time secret from the address and this history entry.
-    window.history.replaceState(window.history.state, "", window.location.pathname);
-    setReady(true);
+    let active = true;
+    void authApi.session().then(session => { if (active) setToken(session?.access_token || null); }).catch(cause => { if (active) setError(errorMessage(cause)); }).finally(() => { if (active) setReady(true); });
+    return () => { active = false; };
   }, []);
-  async function exchange(event: FormEvent) {
-    event.preventDefault(); if (!link || inFlight.current) return;
-    inFlight.current = true; setBusy(true); setError("");
-    try { setToken(await authApi.exchangeMagicToken(link.magicToken, link.email)); setLink(null); }
-    catch (cause) { setError(errorMessage(cause)); }
-    finally { inFlight.current = false; setBusy(false); }
-  }
   async function save(event: FormEvent) {
     event.preventDefault(); if (!token || inFlight.current) return;
     const validation = passwordError(password, confirmation);
     if (validation) { setError(validation); return; }
     inFlight.current = true; setBusy(true); setError("");
-    try { await authApi.updatePassword(password, confirmation, token); setToken(null); setPassword(""); setConfirmation(""); setComplete(true); }
+    try {
+      await authApi.updatePassword(password, confirmation);
+      setPassword(""); setConfirmation(""); setComplete(true);
+      try { await authApi.logout(); setToken(null); }
+      catch { setError("Лозинката е променета, но одјавувањето не успеа. Одјавете се од профилот кога врската ќе биде достапна."); }
+    }
     catch (cause) { setError(errorMessage(cause)); if (isAuthorizationError(cause)) { setToken(null); setInvalid(true); } }
     finally { inFlight.current = false; setBusy(false); }
   }
-  return <RecoveryCard title="Нова лозинка">{!ready ? <p role="status">Се вчитува...</p> : complete ? <div className="admin-success-state" role="status">Лозинката е променета. Најавете се со новата лозинка.</div> : token ? <form onSubmit={save}><PasswordFields busy={busy} password={password} confirmation={confirmation} setPassword={setPassword} setConfirmation={setConfirmation}/><PendingButton busy={busy}>Зачувај лозинка</PendingButton></form> : link && !invalid ? <form onSubmit={exchange}><p>Продолжете за да ја потврдите врската и да поставите нова лозинка. По потврдувањето, завршете ја промената во оваа страница.</p><PendingButton busy={busy}>Продолжи со нова лозинка</PendingButton></form> : <p>Врската недостасува или сесијата е истечена. <Link className="text-link" href="/admin/forgot-password">Побарајте нова врска</Link>.</p>}{error && <><AdminErrorState message={error}/><p><Link className="text-link" href="/admin/forgot-password">Побарај нова врска</Link></p></>}</RecoveryCard>;
+  return <RecoveryCard title="Нова лозинка">{!ready ? <p role="status">Се вчитува...</p> : complete ? <div className="admin-success-state" role="status">Лозинката е променета. Најавете се со новата лозинка.</div> : token && !invalid ? <form onSubmit={save}><PasswordFields busy={busy} password={password} confirmation={confirmation} setPassword={setPassword} setConfirmation={setConfirmation}/><PendingButton busy={busy}>Зачувај лозинка</PendingButton></form> : <p>Отворете ја врската од е-поштата или најавете се за да ја промените лозинката. <Link className="text-link" href="/admin/forgot-password">Побарајте нова врска</Link>.</p>}{error && <AdminErrorState message={error}/>}</RecoveryCard>;
 }
 
 export function ChangePassword() {

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowDownRight, ArrowUpRight, Boxes, LoaderCircle, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Boxes, Eye, EyeOff, LoaderCircle, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { productApi } from "@/lib/api/products";
 import { errorMessage, isAuthorizationError } from "@/lib/api/client";
@@ -102,6 +102,7 @@ export function AdminLogin() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const submitting = useRef(false);
@@ -115,7 +116,7 @@ export function AdminLogin() {
   }
   return <main className="login-page"><form className="login-card" onSubmit={submit}><Link href="/" className="admin-logo"><BrandLogo/><small>ПАНЕЛ ЗА ПРОДАВНИЦАТА</small></Link><p>Најавете се со вашиот администраторски профил.</p>
     <div className="form-field"><label htmlFor="admin-email">Е-пошта</label><input id="admin-email" type="email" required autoComplete="username" value={email} onChange={event => setEmail(event.target.value)} disabled={busy}/></div>
-    <div className="form-field"><label htmlFor="admin-password">Лозинка</label><input id="admin-password" type="password" required autoComplete="current-password" value={password} onChange={event => setPassword(event.target.value)} disabled={busy}/></div>
+    <div className="form-field"><label htmlFor="admin-password">Лозинка</label><div className="login-password-field"><input id="admin-password" type={showPassword ? "text" : "password"} required autoComplete="current-password" value={password} onChange={event => setPassword(event.target.value)} disabled={busy}/><button className="login-password-toggle" type="button" aria-label={showPassword ? "Сокриј ја лозинката" : "Прикажи ја лозинката"} aria-controls="admin-password" disabled={busy} onClick={() => setShowPassword(current => !current)}>{showPassword ? <EyeOff size={20} aria-hidden="true"/> : <Eye size={20} aria-hidden="true"/>}</button></div></div>
     <button className="admin-button" type="submit" disabled={busy || session.status === "loading"}>{busy ? <><LoaderCircle className="loading-spinner" size={15}/>Се најавува...</> : "Најави се"}</button>
     <p><Link className="text-link" href="/admin/forgot-password">Ја заборавивте лозинката?</Link></p>
     <p><Link className="text-link" href="/admin/register">Создај нов профил</Link></p>

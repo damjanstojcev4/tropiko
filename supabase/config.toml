@@ -1,0 +1,9 @@
+project_id = "banana-makovo"
+
+# Each function independently verifies the Supabase user JWT with Auth and reads
+# the current database role before using its server-only admin client.
+[functions.admin-create-user]
+verify_jwt = false
+
+[functions.admin-reset-user-password]
+verify_jwt = false

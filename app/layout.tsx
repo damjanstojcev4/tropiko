@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { copy } from "@/lib/content";
 import "./globals.css";
+import "./storefront.css";
 
 const title = `${copy.shopName} — Свежо овошје и зеленчук`;
 const description = `${copy.shopName}: свежо овошје и зеленчук со одличен квалитет и цена. Погледнете ја сезонската понуда и акциите.`;

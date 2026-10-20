@@ -1,10 +1,9 @@
-export interface AdminUser { id: number; created_at?: number; name: string; email: string; role: string; }
-export interface LoginResponse { authToken: string; user_id: number; }
+import type { ProfileRow, ApplicationRole } from "./database";
+export type AdminUser = ProfileRow;
+export type UserRole = ApplicationRole;
 export interface LoginCredentials { email: string; password: string; }
-export type UserRole = "member" | "admin" | "super_admin";
 export interface SignupCredentials extends LoginCredentials { name: string; }
 export interface UsersPage {
   itemsReceived: number; curPage: number; nextPage: number | null; prevPage: number | null;
-  offset: number; perPage: number; items: AdminUser[];
-  responseFormat?: "paginated" | "array";
+  offset: number; perPage: number; items: AdminUser[]; total: number;
 }

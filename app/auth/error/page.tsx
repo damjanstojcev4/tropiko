@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function AuthErrorPage() { return <main className="login-page"><section className="login-card"><h1 className="recovery-title">Врската не е валидна</h1><p>Врската е истечена, веќе е искористена или потврдата не успеа.</p><Link className="admin-button" href="/admin/forgot-password">Побарај нова врска</Link><p><Link className="text-link" href="/admin/login">Кон најава</Link></p></section></main>; }

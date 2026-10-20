@@ -3,5 +3,7 @@ node_modules/
 .next-dev/
 *.tsbuildinfo
 .env*.local
+supabase/functions/.env
+supabase/.temp/
 reports/performance/*.png
 reports/branding/

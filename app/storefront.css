@@ -1,0 +1,131 @@
+/* Reference-led storefront. Admin screens retain their existing styles. */
+body:has(.site-header) { background: #f8f9ef; padding: 0; }
+.site-header, .hero, .catalog, .site-footer, .contact-page { width: 100%; max-width: none; margin-inline: 0; }
+.site-header { position: relative; background: #0a2815; border: 0; color: #fff; }
+.nav-shell { min-height: 142px; padding: 16px 26px 10px; gap: 26px; }
+.site-header .brand-logo { width: 190px; height: 112px; object-fit: cover; object-position: center 46%; }
+.main-nav, .main-nav.is-open { gap: 23px; margin-left: auto; }
+.main-nav a { color: #f4f6e7; font-size: 13px; font-weight: 600; }
+.main-nav a:hover, .main-nav a[aria-current=page] { color: #cce98b; }
+.main-nav a[aria-current=page]:after { width: 24px; height: 2px; left: calc(50% - 12px); background: #a4d549; }
+.hero { position: relative; background: #fbfae9; overflow: hidden; border: 0; }
+.hero-shell { width: 100%; position: relative; min-height: 480px; display: flex; align-items: center; padding: 50px 64px; isolation: isolate; background: radial-gradient(ellipse at 6% 15%, #e6edcc 0, transparent 40%), linear-gradient(100deg, #fffef4, #f5f5e5); }
+.hero-content { position: relative; z-index: 2; width: 45%; }
+.hero h1 { color: #0e4b2a; font-family: "Segoe Print", "Comic Sans MS", cursive; font-style: italic; font-weight: 800; font-size: clamp(46px, 5.3vw, 76px); line-height: 1.04; letter-spacing: -3px; transform: rotate(-4deg); transform-origin: left; }
+.hero-underline { display: block; width: 230px; height: 7px; margin: 18px 0; background: #75a82d; clip-path: polygon(0 70%, 100% 0, 96% 35%, 0 100%); transform: rotate(-6deg); }
+.hero-description { color: #344a31; font-size: 19px; line-height: 1.4; margin: 14px 0 32px; }
+.hero-benefits { display: flex; align-items: center; gap: 26px; }
+.hero-benefits span { display: flex; align-items: center; gap: 7px; font-size: 10px; line-height: 1.35; color: #355a2e; }
+.hero-benefits svg { width: 25px; height: 30px; stroke-width: 1.4; color: #44852d; }
+/* Supplied hero photography fades into the cream copy panel. */
+.hero-art { position: absolute; z-index: 0; inset: 0 0 0 25%; background: url('/brand/hero-produce.jpg') center / cover no-repeat; mask-image: linear-gradient(to right, transparent 8%, #000 52%); }
+.hero-leaf { position: absolute; color: #5f9029; fill: #7fa73c; opacity: .75; z-index: 1; width: 65px; height: 65px; stroke-width: .7; }
+.hero-leaf-one { left: -15px; top: 12px; transform: rotate(115deg); }
+.hero-leaf-two { left: 7px; bottom: -15px; transform: rotate(-28deg); }
+.catalog { position: relative; background: #f8f9ef; padding: 24px 34px 32px; }
+.catalog-home .section-heading { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.catalog-tools { position: relative; display: flex; flex-direction: row; justify-content: center; margin: 0 0 26px; }
+.category-filters { display: flex; gap: 12px; padding: 0; border: 0; background: transparent; min-width: 0; }
+.filter-pill { border: 1px solid #e1e6d3; background: #fafbf4; color: #41573a; border-radius: 40px; min-height: 48px; min-width: 155px; gap: 13px; padding: 10px 25px; font-size: 14px; }
+.filter-pill svg { width: 22px; height: 22px; color: #44892d; }
+.filter-pill.active { background: linear-gradient(#4c9c2d, #2d7e23); border-color: #4b962a; box-shadow: inset 0 1px 2px #ffffff30; }
+.filter-pill.active svg { color: #fff; }
+.product-count { position: absolute; right: 0; font-size: 10px; color: #7b886d; }
+.catalog-tools:before, .catalog-tools:after { content: ''; width: 24px; height: 44px; position: absolute; background: linear-gradient(55deg, #507629 48%, #92b64e 51%); border-radius: 100% 0 100% 0; }
+.catalog-tools:before { left: 4px; transform: rotate(-35deg); }
+.catalog-tools:after { right: 3px; transform: rotate(20deg); }
+.product-count { display: none; }
+.product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 15px; }
+.product-card { border: 1px solid #edf0df; border-radius: 7px; background: linear-gradient(#fff, #fffff8); box-shadow: 0 3px 10px #45602104; }
+.product-image { aspect-ratio: 1.12; background: transparent; padding: 15px 10px 0; }
+.product-image img { object-fit: contain; mix-blend-mode: multiply; }
+.product-leaf { position: absolute; z-index: 1; right: 13px; top: 13px; width: 24px; height: 24px; color: #7f9e42; fill: #a5bb62; stroke-width: 1; transform: rotate(-22deg); }
+.product-info { text-align: center; padding: 8px 15px 15px; }
+.product-info h3 { margin: 0 0 13px; color: #304d30; font-size: 16px; font-weight: 700; min-height: 23px; }
+.price-wrap { min-height: 34px; justify-content: center; align-items: center; margin-bottom: 15px; gap: 7px; }
+.price-label { color: white; gap: 5px; background: #4b8e2e; padding: 4px 17px; transform: rotate(-2deg); clip-path: polygon(4% 0, 97% 3%, 94% 17%, 100% 27%, 95% 41%, 99% 61%, 95% 80%, 97% 94%, 1% 100%, 4% 82%, 0 69%, 4% 51%, 0 32%, 6% 19%); font-style: italic; }
+.price-label strong { font-size: 25px; font-weight: 750; }
+.price-label > span { font-size: 12px; font-weight: 600; }
+.price-unit { color: #fff; }
+.price-old { color: #8c674b; }
+.sale-badge { background: #f4d15a; color: #344d23; }
+.catalog-page { padding-top: 35px; }
+.catalog-page .section-heading { justify-content: center; margin-bottom: 30px; text-align: center; }
+.site-footer { position: relative; overflow: hidden; background: #104e2b; text-align: center; padding: 28px 20px 20px; min-height: 155px; border-top: 4px solid #9abb44; color: #f0f4d8; }
+.footer-slogan { font-family: "Segoe Print", "Comic Sans MS", cursive; font-size: 25px; font-style: italic; margin: 0 0 12px; }
+.footer-links { display: flex; justify-content: center; gap: 18px; font-size: 11px; color: #d3dfb7; position: relative; z-index: 1; }
+.site-footer > small { display: block; font-size: 9px; color: #acbd8a; margin-top: 14px; }
+.footer-foliage { position: absolute; bottom: -15px; display: flex; align-items: end; color: #75a22c; opacity: .55; pointer-events: none; }
+.footer-foliage-left { left: -5px; transform: rotate(15deg); }
+.footer-foliage-right { right: -5px; transform: scaleX(-1) rotate(15deg); }
+.footer-foliage svg { width: 65px; height: 100px; fill: #52832a; stroke-width: .5; }
+.footer-foliage svg:nth-child(2) { width: 95px; height: 135px; transform: rotate(-20deg); }
+.contact-page { background: #f8f9ef; }
+@media (max-width: 1150px) {
+  .nav-shell { gap: 17px; padding-inline: 18px; }
+  .main-nav, .main-nav.is-open { gap: 16px; }
+  .site-header .brand-logo { width: 150px; }
+  .hero-shell { padding-inline: 45px; min-height: 420px; }
+  .hero-benefits { gap: 15px; }
+}
+@media (max-width: 899px) {
+
+  .nav-shell { min-height: 105px; flex-wrap: wrap; gap: 12px; }
+  .site-header .brand-logo { width: 140px; height: 80px; }
+  .menu-toggle { order: 3; background: #185b35; color: #fff; border-color: #3d7547; }
+  .main-nav, .main-nav.is-open { background: #104e2b; z-index: 10; margin: 0; }
+  .main-nav a:hover, .main-nav a[aria-current=page] { background: #216139; }
+  .hero-shell { min-height: 360px; padding: 32px; }
+  .hero h1 { font-size: 53px; }
+  .hero-description { font-size: 15px; }
+  .hero-benefits { gap: 10px; }
+  .hero-benefits span { font-size: 8px; gap: 4px; }
+  .hero-benefits svg { width: 20px; }
+  .catalog { padding: 20px; }
+  .product-grid { gap: 10px; }
+  .product-info { padding: 8px 9px 12px; }
+  .product-info h3 { font-size: 13px; margin-bottom: 9px; }
+  .price-label { padding-inline: 12px; }
+  .price-label strong { font-size: 22px; }
+  .filter-pill { min-width: 125px; min-height: 43px; font-size: 12px; }
+}
+@media (max-width: 599px) {
+
+  .nav-shell { padding: 8px 10px; gap: 8px; min-height: 90px; }
+  .site-header .brand-logo { width: 112px; height: 74px; }
+  .menu-toggle { width: 33px; height: 33px; }
+  .menu-toggle svg { width: 18px; }
+  .hero-shell { min-height: 490px; padding: 26px 22px 240px; align-items: flex-start; }
+  .hero-content { width: 100%; }
+  .hero h1 { font-size: clamp(35px, 9vw, 51px); letter-spacing: -2px; }
+  .hero-underline { width: 145px; margin: 11px 0; }
+  .hero-description { font-size: 12px; margin: 12px 0 22px; }
+  .hero-art { inset: auto 0 0; height: 245px; background-size: cover; background-position: center bottom; mask-image: linear-gradient(to bottom, transparent, #000 23%); }
+  .hero-benefits { flex-wrap: wrap; gap: 12px; max-width: 200px; }
+  .hero-benefits span { font-size: 8px; }
+  .hero-benefits span:last-child { display: none; }
+  .catalog { padding: 18px 12px 22px; }
+  .catalog-tools { margin-bottom: 18px; }
+  .category-filters { gap: 6px; width: 100%; justify-content: center; }
+  .filter-pill { padding: 9px 13px; min-width: 0; min-height: 40px; flex: 1; gap: 7px; font-size: 11px; }
+  .filter-pill svg { width: 17px; height: 17px; }
+  .catalog-tools:before, .catalog-tools:after { display: none; }
+  .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .product-image { aspect-ratio: 1.15; }
+  .product-info h3 { font-size: 14px; }
+  .price-wrap { margin-bottom: 10px; }
+  .footer-slogan { font-size: 19px; position: relative; z-index: 1; }
+  .footer-foliage { opacity: .25; }
+  .footer-foliage svg { width: 36px; }
+  .footer-foliage svg:nth-child(2) { width: 45px; }
+  .site-footer { min-height: 140px; padding-top: 24px; }
+}
+@media (max-width: 374px) { .site-header .brand-logo { width: 90px; } .nav-shell { padding-inline: 5px; } }
+
+/* Business heritage */
+.footer-heritage { position: relative; z-index: 1; margin: 0 0 20px; color: #d3dfb7; font-size: 13px; line-height: 1.6; letter-spacing: .2px; }
+.footer-heritage strong { color: #e1edba; font-weight: 600; }
+
+.hero-heritage { margin: 22px 0 0; color: #46623b; font-size: 13px; line-height: 1.6; }
+.hero-heritage strong { color: #0e4b2a; font-weight: 650; }
+@media (max-width: 599px) { .hero-heritage { margin-top: 16px; font-size: 12px; } }

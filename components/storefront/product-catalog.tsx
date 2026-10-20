@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
+
 import { Apple, Carrot, LayoutGrid, Leaf } from "lucide-react";
 import { copy } from "@/lib/content";
 import { useCatalog } from "@/lib/use-catalog";
@@ -15,6 +16,7 @@ const filters = [
 ] as const;
 
 export function ProductCatalog({ initialCategory, saleOnly }: { initialCategory?: Category; saleOnly: boolean }) {
+
   const { products, loading, error, reload } = useCatalog({ saleOnly });
   const visible = useMemo(() => products.filter(product => (!initialCategory || product.category === initialCategory) && (!saleOnly || Boolean(product.salePrice))).sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0) || a.name.localeCompare(b.name, "mk")), [products, initialCategory, saleOnly]);
 

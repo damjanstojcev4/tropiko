@@ -1,6 +1,6 @@
 import type { Product } from "@/types/product";
 
-// Visual development fixtures only. Replace by connecting lib/api/products.ts to Xano.
+// Historical visual fixtures only. Production data comes from Supabase through lib/api/products.ts.
 export const fixtureProducts: Product[] = [
   { id: "banana", name: "Банана", category: "fruit", price: 80, unit: "кг", imageUrl: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=720&q=85", is_available: true, displayOrder: 1 },
   { id: "orange", name: "Портокал", category: "fruit", price: 80, unit: "кг", imageUrl: "https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=720&q=85", is_available: true, displayOrder: 2 },

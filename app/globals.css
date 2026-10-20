@@ -224,6 +224,12 @@ svg { flex-shrink: 0; }
 .login-card .admin-logo small { color: #8c9e76; font-size: 8px; letter-spacing: 1.2px; }
 .login-card > p { margin: 22px 0; color: #94a183; text-align: center; font-size: 12px; }
 .login-card .form-field { margin-bottom: 17px; }
+.login-password-field { position: relative; }
+.login-password-field input { min-height: 44px; padding-right: 50px; }
+.login-password-toggle { position: absolute; top: 0; right: 0; display: grid; place-items: center; width: 44px; height: 100%; min-height: 44px; border: 0; border-radius: 6px; background: transparent; color: #5b704b; cursor: pointer; }
+.login-password-toggle:hover { background: #f0f5e9; }
+.login-password-toggle:focus-visible { outline: 2px solid #527b32; outline-offset: 2px; }
+.login-password-toggle:disabled { cursor: default; opacity: .5; }
 .login-card .admin-button { width: 100%; margin-top: 5px; }
 .recovery-title { margin: 24px 0 18px; font-size: 23px; color: var(--forest); text-align: center; }
 .login-card form > p { font-size: 13px; line-height: 1.6; margin-bottom: 20px; }

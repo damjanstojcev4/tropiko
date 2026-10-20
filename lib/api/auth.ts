@@ -1,44 +1,66 @@
-import { apiRequest, ApiError } from "./client";
-import type { AdminUser, LoginCredentials, LoginResponse, SignupCredentials } from "@/types/auth";
+import { createClient } from "@supabase/supabase-js";
+import { ApiError, databaseError } from "./client";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { supabaseConfig } from "@/lib/supabase/config";
+import type { Database } from "@/types/database";
+import type { LoginCredentials, SignupCredentials } from "@/types/auth";
 
-const SESSION_KEY = "banana-makovo-admin-token";
-type PasswordResponse = { message: { success: boolean | string; message: string } } | { success: boolean | string; message: string };
-function confirmPasswordResponse(response: PasswordResponse): void {
-  const result = typeof response.message === "object" ? response.message : response as { success: boolean | string; message: string };
-  if (result?.success !== true && result?.success !== "true") {
-    throw new ApiError(result?.message || "Барањето не успеа. Обидете се повторно.", 0);
-  }
+function createRegistrationClient() {
+  const { url, key } = supabaseConfig();
+  return createClient<Database>(url, key, { auth: { storageKey: "banana-makovo-signup", persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } });
 }
-export function storedToken(): string | null {
-  try { return window.sessionStorage.getItem(SESSION_KEY); } catch { return null; }
-}
-export function storeToken(token: string): void { window.sessionStorage.setItem(SESSION_KEY, token); }
+let registrationClient: ReturnType<typeof createRegistrationClient> | undefined;
 export const authApi = {
-  signup: async (credentials: SignupCredentials) => {
-    const response = await apiRequest<LoginResponse>("/auth/signup", { group: "auth", method: "POST", body: JSON.stringify({ name: credentials.name, email: credentials.email, password: credentials.password }) });
-    if (!response.authToken || !Number.isInteger(response.user_id)) throw new ApiError("Серверот не врати валиден профил. Проверете ја листата пред повторно да се регистрирате.", 0);
-    // Registration never replaces the administrator's current session.
-    return response;
+  session: async () => {
+    const { data, error } = await createSupabaseBrowserClient().auth.getSession();
+    if (error) throw databaseError(error);
+    return data.session;
+  },
+  signup: async ({ name, email, password }: SignupCredentials) => {
+    // Keep a public signup from replacing an already signed-in administrator.
+    const isolated = registrationClient ??= createRegistrationClient();
+    const { data, error } = await isolated.auth.signUp({ email, password, options: { data: { name }, emailRedirectTo: `${window.location.origin}/auth/confirm?next=/admin/login` } });
+    if (error) throw databaseError(error);
+    if (!data.user) throw new ApiError("Не може да се создаде профилот.", 500);
+    return { user_id: data.user.id, requiresConfirmation: !data.session };
   },
   login: async (credentials: LoginCredentials) => {
-    const response = await apiRequest<LoginResponse>("/auth/login", { group: "auth", method: "POST", body: JSON.stringify(credentials) });
-    if (!response.authToken) throw new ApiError("Серверот не врати валидна сесија.", 0);
-    return response;
+    const { data, error } = await createSupabaseBrowserClient().auth.signInWithPassword(credentials);
+    if (error) throw databaseError(error);
+    if (!data.session) throw new ApiError("Серверот не врати валидна сесија.", 401);
+    return data.session;
   },
-  me: (token: string, signal?: AbortSignal) => apiRequest<AdminUser>("/auth/me", { group: "auth", token, signal }),
+  me: async (_token?: string, signal?: AbortSignal) => {
+    const supabase = createSupabaseBrowserClient();
+    const { data: identity, error: authError } = await supabase.auth.getUser();
+    if (authError) throw databaseError(authError);
+    if (!identity.user) throw new ApiError("Најавете се повторно.", 401);
+    let query = supabase.from("profiles").select("id,name,email,role,created_at,updated_at").eq("id", identity.user.id);
+    if (signal) query = query.abortSignal(signal);
+    const { data, error } = await query.single();
+    if (error) throw databaseError(error);
+    return data;
+  },
   requestPasswordReset: async (email: string) => {
-    const response = await apiRequest<PasswordResponse>(`/reset/request-reset-link?${new URLSearchParams({ email })}`, { group: "auth" });
-    confirmPasswordResponse(response);
+    const { error } = await createSupabaseBrowserClient().auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/auth/confirm?next=/account/update-password` });
+    if (error) throw databaseError(error);
   },
-  exchangeMagicToken: async (magic_token: string, email: string) => {
-    const response = await apiRequest<LoginResponse>("/reset/magic-link-login", { group: "auth", method: "POST", body: JSON.stringify({ magic_token, email }) });
-    if (!response.authToken) throw new ApiError("Врската не врати валидна сесија. Побарајте нова врска.", 0);
-    return response.authToken;
+  updatePassword: async (password: string, confirmPassword: string, _token?: string) => {
+    void _token; // Supabase uses its refreshed cookie-backed session.
+    if (password.length < 8 || password !== confirmPassword) throw new ApiError("Лозинките мора да се совпаѓаат и да содржат најмалку 8 знаци.", 400);
+    const { error } = await createSupabaseBrowserClient().auth.updateUser({ password });
+    if (error) throw databaseError(error);
   },
-  updatePassword: async (password: string, confirm_password: string, token: string) => {
-    const response = await apiRequest<PasswordResponse>("/reset/update_password", { group: "auth", token, method: "POST", body: JSON.stringify({ password, confirm_password }) });
-    confirmPasswordResponse(response);
+  updateMyName: async (name: string) => {
+    const supabase = createSupabaseBrowserClient();
+    const { data: identity, error: identityError } = await supabase.auth.getUser();
+    if (identityError || !identity.user) throw new ApiError("Најавете се повторно.", 401);
+    const { data, error } = await supabase.from("profiles").update({ name: name.trim() }).eq("id", identity.user.id).select().single();
+    if (error) throw databaseError(error);
+    return data;
   },
-  // The supplied contract has no logout/revoke endpoint. Discard this browser session locally.
-  logout: () => { try { window.sessionStorage.removeItem(SESSION_KEY); } catch { /* No browser session to remove. */ } },
+  logout: async () => {
+    const { error } = await createSupabaseBrowserClient().auth.signOut({ scope: "local" });
+    if (error) throw databaseError(error);
+  },
 };

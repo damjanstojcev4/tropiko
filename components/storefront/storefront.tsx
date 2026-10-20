@@ -1,40 +1,38 @@
 import Link from "next/link";
-import { Apple, ArrowRight, ArrowUpRight, Carrot, Check, Clock3, Leaf, MapPin, Phone, Sprout } from "lucide-react";
+import { ArrowUpRight, Clock3, Heart, Leaf, MapPin, Phone, ShieldCheck } from "lucide-react";
 import { copy } from "@/lib/content";
 import { ProductCatalog } from "@/components/storefront/product-catalog";
 import { MobileNavigation } from "@/components/storefront/mobile-navigation";
-import { BrandLogo } from "@/components/brand-logo";
+import Image from "next/image";
+
 import type { Category } from "@/types/product";
 
 export function Navbar() {
   return <header className="site-header"><div className="nav-shell">
-      <Link className="brand" href="/" aria-label={`${copy.shopName} — почетна`}><BrandLogo priority/><span className="brand-wordmark">Banana<span>Makovo</span></span></Link>
-      <MobileNavigation/>
-      <Link href="/#products" className="header-catalog">Нашата понуда<ArrowUpRight size={16}/></Link>
-    </div></header>;
+    <Link className="brand" href="/" aria-label={`${copy.shopName} — почетна`}><Image className="brand-logo" src="/brand/navbar-logo.png" alt={copy.shopName} width={1440} height={2560} priority unoptimized/></Link>
+    <MobileNavigation/>
+  </div></header>;
 }
 
 export function HeroSection() {
   return <section className="hero"><div className="hero-shell">
-    <div className="hero-content">
-      <h1>{copy.hero.title}<br/><span>{copy.hero.accent}</span></h1>
-      <p className="hero-description">{copy.hero.description}</p>
-      <div className="hero-actions"><Link href="#products" className="hero-cta">{copy.hero.action}<ArrowRight size={17}/></Link></div>
+    <div className="hero-content"><h1>Свежина<br/>секој ден!</h1><span className="hero-underline"/>
+      <p className="hero-description">Овошје и зеленчук со одличен<br/>квалитет и цена.</p>
+      <div className="hero-benefits"><span><Leaf/>Свежи<br/>производи</span><span><ShieldCheck/>Висок<br/>квалитет</span><span><Heart/>Внимателно<br/>избрано</span></div>
+      <p className="hero-heritage">Повеќе од <strong>30 години</strong> со вас.</p>
     </div>
-    <div className="hero-categories">
-      <Link href="/fruit" className="category-tile fruit-tile"><Apple className="category-tile-icon" strokeWidth={1.3} aria-hidden="true"/><h2>{copy.nav.fruit}</h2><p>{copy.hero.fruitNote}</p><span className="tile-arrow"><ArrowUpRight size={19}/></span></Link>
-      <Link href="/vegetables" className="category-tile vegetable-tile"><Carrot className="category-tile-icon" strokeWidth={1.3} aria-hidden="true"/><h2>{copy.nav.vegetables}</h2><p>{copy.hero.vegetableNote}</p><span className="tile-arrow"><ArrowUpRight size={19}/></span></Link>
-    </div>
-  </div><div className="benefit-strip">{copy.hero.benefits.map(benefit => <span key={benefit}><Check size={14} aria-hidden="true"/>{benefit}</span>)}</div></section>;
+    <div className="hero-art" role="img" aria-label="Banana Makovo — свежо овошје и зеленчук"/>
+    <Leaf className="hero-leaf hero-leaf-one" aria-hidden="true"/><Leaf className="hero-leaf hero-leaf-two" aria-hidden="true"/>
+  </div></section>;
 }
 
 export function ProductCatalogServer({ initialCategory, showHero = true, saleOnly = false }: { initialCategory?: Category; showHero?: boolean; saleOnly?: boolean }) {
   const title = saleOnly ? copy.catalog.saleTitle : initialCategory === "fruit" ? copy.catalog.fruitTitle : initialCategory === "vegetable" ? copy.catalog.vegetableTitle : copy.catalog.title;
-  return <>{showHero && <HeroSection/>}<main className={`catalog ${showHero ? "" : "catalog-page"}`} id="products"><div className="section-heading"><h2>{title}</h2></div><ProductCatalog initialCategory={initialCategory} saleOnly={saleOnly}/></main></>;
+  return <>{showHero && <HeroSection/>}<main className={`catalog ${showHero ? "catalog-home" : "catalog-page"}`} id="products"><div className="section-heading"><h2>{title}</h2></div><ProductCatalog initialCategory={initialCategory} saleOnly={saleOnly}/></main></>;
 }
 
 export function StoreFooter() {
-  return <footer className="site-footer"><div className="footer-shell"><div className="footer-message"><Sprout size={26} strokeWidth={1.5}/><h2>{copy.footer.title}<br/><span>{copy.footer.accent}</span></h2><p>{copy.footer.description}</p></div><div className="footer-navigation"><p>{copy.footer.navLabel}</p><nav aria-label="Навигација во подножје"><Link href="/fruit">{copy.nav.fruit}<ArrowUpRight size={14}/></Link><Link href="/vegetables">{copy.nav.vegetables}<ArrowUpRight size={14}/></Link><Link href="/sale">{copy.nav.sale}<ArrowUpRight size={14}/></Link><Link href="/contact">{copy.nav.contact}<ArrowUpRight size={14}/></Link></nav></div></div><div className="footer-bottom"><span className="footer-brand">{copy.shopName}<span>© {new Date().getFullYear()}</span></span><span>{copy.footer.note}<Leaf size={13}/></span></div></footer>;
+  return <footer className="site-footer"><div className="footer-foliage footer-foliage-left" aria-hidden="true"><Leaf/><Leaf/><Leaf/></div><p className="footer-slogan">Природата ни дава најдобро!</p><p className="footer-heritage">Повеќе од <strong>30 години</strong> со вас.</p><nav className="footer-links" aria-label="Навигација во подножје"><Link href="/fruit">Овошје</Link><span>·</span><Link href="/vegetables">Зеленчук</Link><span>·</span><Link href="/contact">Контакт</Link></nav><small>{copy.shopName} © {new Date().getFullYear()}</small><div className="footer-foliage footer-foliage-right" aria-hidden="true"><Leaf/><Leaf/><Leaf/></div></footer>;
 }
 
 export function ContactPage() {

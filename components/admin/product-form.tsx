@@ -3,21 +3,21 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ImagePlus, LoaderCircle, Trash2 } from "lucide-react";
-import { parseUploadedProductImage, productApi, validateProductImage } from "@/lib/api/products";
+import { productApi, validateProductImage } from "@/lib/api/products";
 import { ApiError, errorMessage, isAuthorizationError } from "@/lib/api/client";
 import { unitToApi } from "@/lib/api/mappers";
 import { publishCatalogChange } from "@/lib/catalog-events";
 import { ProductPhoto } from "@/components/product-photo";
 import { AdminErrorState, AdminLoadingState, useAdminSession } from "./admin-session";
 import { AdminShell } from "./admin-shell";
-import type { Category, Product, ProductPayload, ProductUnit, XanoAttachment } from "@/types/product";
+import type { Category, Product, ProductPayload, ProductUnit, UploadedProductImage } from "@/types/product";
 
 const blank = { name: "", category: "fruit" as Category, price: "", unit: "кг" as ProductUnit, description: "", is_available: true, salePrice: "", displayOrder: "" };
 
 export function ProductFormPage({ productId }: { productId?: string }) {
   const router = useRouter();
   const session = useAdminSession();
-  const { token, status, logout } = session;
+  const { status, logout } = session;
   const [form, setForm] = useState(blank);
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(Boolean(productId));
@@ -25,27 +25,33 @@ export function ProductFormPage({ productId }: { productId?: string }) {
   const [revision, setRevision] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [feedback, setFeedback] = useState("");
-  const [uploadDetails, setUploadDetails] = useState("");
+  const [savedId, setSavedId] = useState<string | undefined>(productId);
   const [stage, setStage] = useState<"uploading" | "saving" | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
   const [removeImage, setRemoveImage] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const inFlight = useRef(false);
-  const uploaded = useRef<{ file: File; image: XanoAttachment } | null>(null);
+  const uploaded = useRef<{ file: File; image: UploadedProductImage } | null>(null);
+  const persistedId = useRef(productId);
   const busy = stage !== null;
 
   useEffect(() => {
-    if (!productId || status !== "authenticated" || !token) return;
+    persistedId.current = productId; setSavedId(productId);
+    setProduct(null); setFile(null); setRemoveImage(false); uploaded.current = null;
+    setForm(blank); setFeedback(""); setErrors({});
+  }, [productId]);
+  useEffect(() => {
+    if (!productId || status !== "authenticated") return;
     const controller = new AbortController();
     setLoading(true); setLoadError("");
-    productApi.getAdmin(productId, token, controller.signal).then(value => {
+    productApi.get(productId, controller.signal).then(value => {
       if (controller.signal.aborted) return;
       setProduct(value); setFile(null); setRemoveImage(false); uploaded.current = null;
       setForm({ name: value.name, category: value.category, price: String(value.price), unit: value.unit, description: value.description || "", is_available: value.is_available, salePrice: value.salePrice ? String(value.salePrice) : "", displayOrder: String(value.displayOrder ?? 0) });
     }).catch(cause => { if (!controller.signal.aborted) { if (isAuthorizationError(cause)) logout(); else setLoadError(cause instanceof ApiError && cause.status === 404 ? "Производот не е пронајден." : errorMessage(cause)); } }).finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [productId, status, token, logout, revision]);
+  }, [productId, status, logout, revision]);
   useEffect(() => {
     if (file) { const url = URL.createObjectURL(file); setPreview(url); return () => URL.revokeObjectURL(url); }
     setPreview(removeImage ? "" : product?.imageUrl || "");
@@ -56,10 +62,10 @@ export function ProductFormPage({ productId }: { productId?: string }) {
     if (!selected) return;
     const error = validateProductImage(selected);
     if (error) { setErrors(old => ({ ...old, image: error })); if (inputRef.current) inputRef.current.value = ""; return; }
-    setFile(selected); setRemoveImage(false); uploaded.current = null; setErrors(old => ({ ...old, image: "" })); setFeedback(""); setUploadDetails("");
+    setFile(selected); setRemoveImage(false); uploaded.current = null; setErrors(old => ({ ...old, image: "" })); setFeedback("");
   }
   function clearImage() {
-    setFile(null); setRemoveImage(true); uploaded.current = null; setUploadDetails("");
+    setFile(null); setRemoveImage(true); uploaded.current = null;
     if (inputRef.current) inputRef.current.value = "";
     setErrors(old => ({ ...old, image: "" }));
   }
@@ -75,58 +81,44 @@ export function ProductFormPage({ productId }: { productId?: string }) {
     if (file) { const error = validateProductImage(file); if (error) nextErrors.image = error; }
     if (errors.image) nextErrors.image = errors.image;
     setErrors(nextErrors); if (Object.keys(nextErrors).length) return;
-    inFlight.current = true; setFeedback(""); setUploadDetails("");
+    inFlight.current = true; setFeedback("");
     let saved = false;
+    let fieldsSaved = false;
     try {
-      let image: XanoAttachment | undefined;
-      if (file) {
-        setStage("uploading");
-        image = uploaded.current?.file === file ? parseUploadedProductImage(uploaded.current.image) : await productApi.uploadImage(file, session.token);
-        uploaded.current = { file, image };
-      }
       setStage("saving");
       const payload: ProductPayload = {
         name: form.name.trim(), description: form.description.trim(), price,
-        category: product && product.category === form.category ? product.apiCategory ?? form.category : form.category,
+        category: form.category,
         unit: unitToApi[form.unit], is_available: form.is_available,
-        is_on_sale: salePrice !== undefined, ...(salePrice !== undefined ? { sale_price: salePrice } : {}),
-        ...(form.displayOrder ? { sort_order: Number(form.displayOrder) } : {}),
-        ...(image ? { image } : {}), ...(productId && removeImage && !image ? { remove_image: true } : {}),
+        is_on_sale: salePrice !== undefined, sale_price: salePrice ?? null,
+        sort_order: Number(form.displayOrder || 0),
       };
-      if (productId) await productApi.update(productId, payload, session.token);
-      else await productApi.create(payload, session.token);
+      const record = persistedId.current ? await productApi.update(persistedId.current, payload, session.token) : await productApi.create(payload, session.token);
+      persistedId.current = record.id; setSavedId(record.id); setProduct(record); fieldsSaved = true; publishCatalogChange();
+      if (file) {
+        setStage("uploading");
+        const image = uploaded.current?.file === file && uploaded.current.image.productId === record.id ? uploaded.current.image : await productApi.uploadImage(record.id, file);
+        uploaded.current = { file, image };
+        setStage("saving");
+        await productApi.attachImage(image);
+      } else if (removeImage && record.imagePath) {
+        await productApi.clearImage(record.id);
+      }
       saved = true; publishCatalogChange(); router.push("/admin/products");
     } catch (cause) {
       if (isAuthorizationError(cause)) session.logout();
-      else if (cause instanceof ApiError && cause.param === "image.path") {
-        const hadUploadedImage = Boolean(uploaded.current);
-        uploaded.current = null;
-        setUploadDetails(cause.details || "");
-        if (cause.status === 0) {
-          setFeedback(errorMessage(cause));
-        } else if (hadUploadedImage) {
-          setFeedback("Фотографијата е прикачена, но серверот не ја прифати при зачувување на производот. Ова е проблем во поврзувањето со серверот; не треба рачно да внесувате патека.");
-        } else {
-          setErrors(current => ({ ...current, image: "Серверот бара фотографија за овој производ. Изберете фотографија и зачувајте повторно." }));
-          setFeedback("Производот не е зачуван: серверот бара прикачена фотографија.");
-        }
-      }
-      else {
-        setFeedback(`${uploaded.current ? "Фотографијата е прикачена, но производот не е зачуван. " : ""}${errorMessage(cause)}`);
-        setUploadDetails(cause instanceof ApiError ? cause.details || "" : "");
-      }
+      else setFeedback(`${fieldsSaved ? "Податоците за производот се зачувани, но промената на фотографијата не успеа. Повторниот обид ќе го користи истиот производ. " : ""}${errorMessage(cause)}`);
     } finally { if (!saved) { inFlight.current = false; setStage(null); } }
   }
 
   return <AdminShell><main className="admin-content">
     <div className="admin-breadcrumb">Администрација / Производи / {productId ? "Уреди" : "Нов производ"}</div>
-    <div className="admin-title-row"><div><h1>{productId ? "Уреди производ" : "Додај производ"}</h1><p>Фотографијата и промените се зачувуваат со производот.</p></div></div>
+    <div className="admin-title-row"><div><h1>{savedId ? "Уреди производ" : "Додај производ"}</h1><p>Изберете фотографија од вашиот уред. Прикачувањето се врши при зачувување.</p></div></div>
     {loading ? <AdminLoadingState message="Се вчитува производот..."/> : loadError ? <AdminErrorState message={loadError} retry={() => setRevision(value => value + 1)}/> : <form className="admin-form" onSubmit={submit} noValidate>
       {feedback && <div className="admin-error-state" role="alert">{feedback}</div>}
-      {uploadDetails && <details className="upload-diagnostics" open><summary>Детали за прикачувањето — испратете слика од овој дел</summary><pre>{uploadDetails}</pre></details>}
       <fieldset className="product-form-fields" disabled={busy}><div className="form-grid">
         <div className="form-field"><label htmlFor="product-name">Име на производ *</label><input id="product-name" required value={form.name} onChange={event => change("name", event.target.value)} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "name-error" : undefined} placeholder="На пр. Портокал"/>{errors.name && <span className="form-error" id="name-error">{errors.name}</span>}</div>
-        <div className="form-field"><label htmlFor="product-category">Категорија *</label><select id="product-category" value={form.category} onChange={event => change("category", event.target.value as Category)}><option value="fruit">Овошје</option><option value="vegetable">Зеленчук</option>{product?.category === "other" && <option value="other">{product.apiCategory || "Без категорија"}</option>}</select></div>
+        <div className="form-field"><label htmlFor="product-category">Категорија *</label><select id="product-category" value={form.category} onChange={event => change("category", event.target.value as Category)}><option value="fruit">Овошје</option><option value="vegetable">Зеленчук</option><option value="other">Други производи</option></select></div>
         <div className="form-field"><label htmlFor="product-price">Цена (ден) *</label><input id="product-price" required type="number" inputMode="decimal" min="0.01" step="0.01" value={form.price} onChange={event => change("price", event.target.value)} aria-invalid={Boolean(errors.price)} aria-describedby={errors.price ? "price-error" : undefined}/>{errors.price && <span className="form-error" id="price-error">{errors.price}</span>}</div>
         <div className="form-field"><label htmlFor="product-unit">Единица *</label><select id="product-unit" value={form.unit} onChange={event => change("unit", event.target.value as ProductUnit)}><option value="кг">ден/кг</option><option value="парче">ден/парче</option><option value="пакување">ден/пакување</option></select></div>
         <div className="form-field full"><label htmlFor="product-image">Фотографија на производот</label><div className="image-upload">
@@ -137,7 +129,7 @@ export function ProductFormPage({ productId }: { productId?: string }) {
         <div className="form-field"><label htmlFor="product-order">Редослед на прикажување</label><input id="product-order" type="number" min="0" step="1" value={form.displayOrder} onChange={event => change("displayOrder", event.target.value)} aria-invalid={Boolean(errors.displayOrder)}/>{errors.displayOrder && <span className="form-error">{errors.displayOrder}</span>}</div>
         <div className="form-field full"><label htmlFor="product-description">Опис</label><textarea id="product-description" value={form.description} onChange={event => change("description", event.target.value)}/></div>
         <label className="checkbox-row form-field full"><input type="checkbox" checked={form.is_available} onChange={event => change("is_available", event.target.checked)}/>Достапен за купувачите</label>
-        <div className="form-actions"><button type="button" className="admin-button secondary" onClick={() => router.push("/admin/products")}>Откажи</button><button className="admin-button" type="submit">{busy && <LoaderCircle size={15} className="loading-spinner"/>}{stage === "uploading" ? "Се прикачува фотографијата..." : stage === "saving" ? "Се зачувува..." : productId ? "Зачувај промени" : "Додај производ"}</button></div>
+        <div className="form-actions"><button type="button" className="admin-button secondary" onClick={() => router.push("/admin/products")}>{savedId ? "Назад кон производи" : "Откажи"}</button><button className="admin-button" type="submit">{busy && <LoaderCircle size={15} className="loading-spinner"/>}{stage === "uploading" ? "Се прикачува фотографијата..." : stage === "saving" ? "Се зачувува..." : savedId ? "Зачувај промени" : "Додај производ"}</button></div>
       </div></fieldset>
     </form>}
   </main></AdminShell>;
