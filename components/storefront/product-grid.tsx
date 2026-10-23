@@ -6,9 +6,10 @@ import { ProductPhoto } from "@/components/product-photo";
 import type { Product } from "@/types/product";
 
 function PriceLabel({ product }: { product: Product }) {
+  const measure = `ден/${product.unit.replaceAll(" ", "\u00a0")}`;
   return <div className="price-wrap">
-    <span className="price-label"><strong>{product.salePrice ?? product.price}</strong><span>ден<span className="price-unit"> / {product.unit}</span></span></span>
-    {product.salePrice && <s className="price-old">{product.price} ден</s>}
+    <span className="price-label"><strong>{product.salePrice ?? product.price}</strong><span className="price-measure">{measure}</span></span>
+    {product.salePrice && <s className="price-old">{product.price} {measure}</s>}
   </div>;
 }
 

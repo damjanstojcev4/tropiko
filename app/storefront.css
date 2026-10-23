@@ -43,10 +43,9 @@ body:has(.site-header) { background: #f8f9ef; padding: 0; }
 .product-info { text-align: center; padding: 8px 15px 15px; }
 .product-info h3 { margin: 0 0 13px; color: #304d30; font-size: 16px; font-weight: 700; min-height: 23px; }
 .price-wrap { min-height: 34px; justify-content: center; align-items: center; margin-bottom: 15px; gap: 7px; }
-.price-label { color: white; gap: 5px; background: #4b8e2e; padding: 4px 17px; transform: rotate(-2deg); clip-path: polygon(4% 0, 97% 3%, 94% 17%, 100% 27%, 95% 41%, 99% 61%, 95% 80%, 97% 94%, 1% 100%, 4% 82%, 0 69%, 4% 51%, 0 32%, 6% 19%); font-style: italic; }
+.price-label { max-width: 100%; flex-wrap: wrap; justify-content: center; color: white; column-gap: 5px; row-gap: 0; background: #4b8e2e; padding: 4px 17px; transform: rotate(-2deg); clip-path: polygon(4% 0, 97% 3%, 94% 17%, 100% 27%, 95% 41%, 99% 61%, 95% 80%, 97% 94%, 1% 100%, 4% 82%, 0 69%, 4% 51%, 0 32%, 6% 19%); font-style: italic; }
 .price-label strong { font-size: 25px; font-weight: 750; }
-.price-label > span { font-size: 12px; font-weight: 600; }
-.price-unit { color: #fff; }
+.price-label .price-measure { color: #fff; font-size: 12px; font-weight: 600; white-space: nowrap; }
 .price-old { color: #8c674b; }
 .sale-badge { background: #f4d15a; color: #344d23; }
 .catalog-page { padding-top: 35px; }
