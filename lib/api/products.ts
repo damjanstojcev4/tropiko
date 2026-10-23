@@ -1,6 +1,7 @@
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { PRODUCT_IMAGE_BUCKET } from "@/lib/supabase/config";
 import { forgetImageCleanup, queueImageCleanup } from "@/lib/image-cleanup";
+import { compareProductOrder } from "@/lib/product-order";
 import { fromApiProduct } from "./mappers";
 import { ApiError, databaseError } from "./client";
 import type { Product, ProductPayload, UploadedProductImage } from "@/types/product";
@@ -30,7 +31,7 @@ async function listProducts(params: CatalogQuery = {}, signal?: AbortSignal): Pr
     const { data, error } = await query;
     if (error) throw databaseError(error);
     products.push(...data.map(fromApiProduct));
-    if (data.length < pageSize) return products;
+    if (data.length < pageSize) return products.sort(compareProductOrder);
   }
 }
 async function get(id: string, signal?: AbortSignal): Promise<Product> {
