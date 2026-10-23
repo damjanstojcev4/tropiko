@@ -73,7 +73,8 @@ The user-list recovery-email button invokes Supabase's public recovery API, whic
 ## Products and uploaded photographs
 
 - Native `products` queries use UUID IDs, stable `sort_order/name/id` ordering, and bounded range reads. All pages are read for the existing catalog UI. Availability is only filtered when requested, so out-of-stock products remain visible.
-- The mapper keeps the Macedonian UI units while sending `kg`, `piece`, and `package` to the database. Turning a sale off explicitly clears `sale_price` to satisfy the documented constraints.
+- The mapper keeps the Macedonian UI units while sending `kg`, `piece`, `package`, `kg_5`, `kg_10`, `kg_7`, and `kg_3` to the database. Turning a sale off explicitly clears `sale_price` to satisfy the documented constraints.
+- Before deploying the bulk measure options (ден/5 кг, ден/10 кг, ден/7 кг, ден/3 кг), run `supabase/migrations/20261023000000_add_bulk_product_units.sql` in the Supabase SQL Editor. It discovers and extends the existing `products.unit` enum without changing product records or access policies. New values become usable after the SQL transaction commits. The price entered is the total for the selected measure; there is no automatic multiplication or division.
 - Product field writes **never include `image_path`**. Only the image RPCs control that column.
 - Saving a new product first creates its metadata row. The form retains that UUID if the photo stage fails; retrying updates that same product rather than inserting a duplicate. Metadata can therefore be saved even if the photo fails, and the form reports this partial result.
 - The file picker accepts JPEG/PNG/WebP up to 5,242,880 bytes. The app generates `products/<product UUID>/<random UUID>.<extension>`, calls `reserve_product_image(p_product_id, p_image_path)`, uploads the real File to `product-images` with `upsert:false`, then calls `attach_product_image(p_product_id, p_image_path)`.

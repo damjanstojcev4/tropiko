@@ -3,7 +3,7 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 export type ApplicationRole = "member" | "admin" | "super_admin";
 export type ProductCategory = "fruit" | "vegetable" | "other";
-export type ApiProductUnit = "kg" | "piece" | "package";
+export type ApiProductUnit = "kg" | "piece" | "package" | "kg_5" | "kg_10" | "kg_7" | "kg_3";
 export type ProductRow = {
   id: string; name: string; description: string; category: ProductCategory; price: number; unit: ApiProductUnit;
   is_available: boolean; is_on_sale: boolean; sale_price: number | null; sort_order: number;
